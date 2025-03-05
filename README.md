@@ -5,12 +5,11 @@ GridNote 是一个 Obsidian 插件，它将 Markdown 文档按照标题的嵌套
 ## 特性
 - **树形卡片视图**：根据 Markdown 结构自动生成卡片视图。
 - **康奈尔笔记法**：结合学习方法，提高知识吸收。
-- **无缝编辑**：在卡片视图中直接编辑内容。
 
 ## 预览
-（此处添加你的图片示例，例如：）
 
-![GridNote 示例](./images/example.png)
+![GridNote](./images/英文展示.png)
+![GridNote](./images/中文展示.png)
 
 ## 安装
 
@@ -21,8 +20,8 @@ GridNote 是一个 Obsidian 插件，它将 Markdown 文档按照标题的嵌套
 4. 启用插件并开始使用。
 
 ### 方式 2：手动安装
-1. 访问 [GitHub Releases](https://github.com/your-repo/gridnote/releases) 下载最新版本的 `main.js`、`manifest.json` 和 `styles.css`。
-2. 将这些文件放入你的 Obsidian 插件目录：`<你的库>/plugins/gridnote/`。
+1. 访问 [GitHub Releases](https://github.com/Dcx199302/Obsidian-GridNote-Plugin/releases) 下载最新版本。
+2. 将这些文件放入你的 Obsidian 插件目录。
 3. 在 Obsidian 中启用插件。
 
 ## 使用方法
@@ -30,8 +29,6 @@ GridNote 是一个 Obsidian 插件，它将 Markdown 文档按照标题的嵌套
 2. 在插件界面切换到 GridNote 视图。
 3. 享受更清晰的结构化笔记体验！
 
-## 许可协议
-由于本插件未提供源代码，仅提供打包文件，具体的使用协议请参考插件发布页面。
 
 ## 反馈 & 支持
-如果你有任何问题或建议，请在 [GitHub Issues](https://github.com/your-repo/gridnote/issues) 提交反馈。
+如果你有任何问题或建议，请在 [GitHub Issues](https://github.com/Dcx199302/Obsidian-GridNote-Plugin/issues) 提交反馈。
