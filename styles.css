@@ -1,0 +1,42 @@
+/*
+
+This CSS file will be included with your plugin, and
+available in the app when your plugin is enabled.
+
+If your plugin does not need CSS, delete this file.
+
+*/
+
+.markdown-editor-container{
+    display: static;
+    position: fixed;
+    max-width: 700px;
+    /* margin: 0 auto; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 600px;
+    border-top: 2px solid var(--background-modifier-border);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.markdown-editor-header{
+    display: none;
+}
+.markdown-editor-content{
+    /* max-width: 900px; */
+    margin: 0 auto;
+}
+.markdown-editor-content .cm-scroller{
+    /* padding: 0px !important; */
+}
+.grid-note-setting-activate input{
+    width: 100%;
+}
+
+/* CSS (添加到样式文件) */
+.pro-notice-link{
+    color: var(--text-accent);
+    /* width: 100px; */
+    text-decoration: none;
+}
