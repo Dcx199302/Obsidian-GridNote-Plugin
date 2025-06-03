@@ -1,11 +1,11 @@
 {
 	"id": "gird-note",
 	"name": "GridNote",
-	"version": "1.0.11",
+	"version": "1.0.16",
 	"minAppVersion": "0.15.0",
-	"description": "Unlock a New Dimension of Thinking – An innovative plugin that integrates mind mapping, the Zettelkasten method, and the Cornell note-taking system. Reconstruct knowledge with a tree-structured card system, making your thoughts crystal clear, organizing more efficiently, and learning with greater focus!",
+	"description": "Innovative tool merging mind mapping, Zettelkasten & Cornell notes. Tree-structured cards reconstruct knowledge, clarify thoughts & enhance focused learning. (closed source)",
 	"author": "ChengDong Xu",
 	"authorUrl": "https://github.com/Dcx199302",
-	"fundingUrl": "https://gridnote.cn/#/landing",
+	"fundingUrl": "",
 	"isDesktopOnly": true
 }
