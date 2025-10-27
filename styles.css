@@ -7,28 +7,13 @@ If your plugin does not need CSS, delete this file.
 
 */
 
-.markdown-editor-container{
-    display: static;
-    position: fixed;
-    max-width: 700px;
-    /* margin: 0 auto; */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-height: 600px;
-    border-top: 2px solid var(--background-modifier-border);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
+/* 移除全局定位样式，编辑器应在组件自然位置显示 */
 
 .markdown-editor-header{
     display: none;
 }
 .markdown-editor-content{
-    /* max-width: 900px; */
     margin: 0 auto;
-}
-.markdown-editor-content .cm-scroller{
-    /* padding: 0px !important; */
 }
 .grid-note-setting-activate input{
     width: 100%;
@@ -37,6 +22,687 @@ If your plugin does not need CSS, delete this file.
 /* CSS (添加到样式文件) */
 .pro-notice-link{
     color: var(--text-accent);
-    /* width: 100px; */
     text-decoration: none;
+}
+
+/* Modal 编辑器样式 - 高级UI设计 */
+.grid-note-editor-modal {
+    /* 16:9 比例计算 */
+    width: min(85vw, 1024px);
+    height: min(calc(85vw * 9 / 16), calc(1024px * 9 / 16));
+    max-width: 1024px;
+    max-height: 576px;
+    min-width: 640px;
+    min-height: 360px;
+    
+    /* 布局 */
+    display: flex;
+    flex-direction: column;
+    
+    /* 圆角和阴影 */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+                0 2px 8px rgba(0, 0, 0, 0.06);
+    
+    /* 动画 */
+    animation: modalSlideIn 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+}
+
+
+/* 底部模态框样式 */
+.grid-note-editor-modal.bottom-modal {
+    /* 重置默认样式 */
+    width: auto !important;
+    height: 400px !important;
+    max-width: none !important;
+    max-height: none !important;
+    min-width: none !important;
+    min-height: none !important;
+    
+    /* 位置和圆角 */
+    position: fixed !important;
+    bottom: 0 !important;
+    transform: none !important;
+    margin: 0 !important;
+    border-radius: 8px 8px 0 0 !important;
+    
+    /* 阴影调整 */
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15),
+                0 -2px 8px rgba(0, 0, 0, 0.08);
+    
+    /* 滑入动画调整 */
+    animation: modalSlideUpIn 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+}
+
+/* 弹框出现动画 */
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 底部弹框滑入动画 */
+@keyframes modalSlideUpIn {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* 自定义底部抽屉样式 */
+.grid-note-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9998;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    pointer-events: none; /* 允许点击穿透到背景内容 */
+}
+
+.grid-note-drawer {
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15),
+                0 -4px 16px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000),
+                opacity 0.2s ease;
+    overflow: hidden;
+}
+
+/* 抽屉标题栏 */
+.grid-note-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px 12px;
+    background: var(--background-secondary);
+    border-bottom: 1px solid var(--background-modifier-border);
+    min-height: 52px;
+}
+
+.grid-note-drawer-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-normal);
+    user-select: none;
+}
+
+.grid-note-drawer-close {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: var(--background-modifier-hover);
+    color: var(--text-muted);
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.grid-note-drawer-close:hover {
+    background: var(--background-modifier-border);
+    color: var(--text-normal);
+    transform: scale(1.05);
+}
+
+.grid-note-drawer-close:active {
+    transform: scale(0.95);
+}
+
+/* 编辑器区域 */
+.grid-note-drawer-editor {
+    flex: 1;
+    padding: 16px 20px;
+    overflow: hidden;
+    background: var(--background-primary);
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+/* 编辑器包装器 - 限制最大宽度并居中 */
+.grid-note-drawer-editor-wrapper {
+    width: 100%;
+    max-width: 900px; /* 限制最大宽度 */
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-note-drawer-editor-component {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    background: var(--background-primary) !important;
+}
+
+
+/* 就地编辑器样式 */
+.in-place-markdown-editor {
+    width: 100% !important;
+    min-height: 120px !important;
+    border: none !important;
+    background: var(--background-primary) !important;
+    font-size: var(--font-text-size) !important;
+}
+
+/* 底部按钮栏 */
+.grid-note-drawer-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px 16px;
+    background: var(--background-secondary);
+    border-top: 1px solid var(--background-modifier-border);
+    min-height: 60px;
+}
+
+.grid-note-drawer-hint {
+    flex: 1;
+    font-size: var(--font-smaller);
+    color: var(--text-faint);
+    opacity: 0.8;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.grid-note-drawer-hint::before {
+    content: "⌨";
+    opacity: 0.6;
+    font-size: var(--font-small);
+}
+
+.grid-note-drawer-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* 抽屉按钮样式 */
+.grid-note-drawer-btn-primary,
+.grid-note-drawer-btn-secondary {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: var(--font-small);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    border: none;
+    min-width: 68px;
+}
+
+.grid-note-drawer-btn-primary {
+    background: linear-gradient(135deg, 
+                var(--interactive-accent) 0%, 
+                var(--interactive-accent-hover) 100%);
+    color: var(--text-on-accent);
+    box-shadow: 0 2px 8px rgba(var(--color-accent-rgb), 0.25);
+}
+
+.grid-note-drawer-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.35);
+}
+
+.grid-note-drawer-btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(var(--color-accent-rgb), 0.25);
+}
+
+.grid-note-drawer-btn-secondary {
+    background: var(--background-primary);
+    color: var(--text-normal);
+    border: 1px solid var(--background-modifier-border);
+}
+
+.grid-note-drawer-btn-secondary:hover {
+    background: var(--background-modifier-hover);
+    border-color: var(--background-modifier-border-hover);
+    transform: translateY(-1px);
+}
+
+.grid-note-drawer-btn-secondary:active {
+    transform: translateY(0);
+    background: var(--background-modifier-active);
+}
+
+/* 深色主题适配 */
+.theme-dark .grid-note-drawer {
+    background: var(--background-primary);
+    border-color: var(--background-modifier-border);
+}
+
+.theme-dark .grid-note-drawer-header,
+.theme-dark .grid-note-drawer-footer {
+    background: var(--background-secondary);
+}
+
+.theme-dark .grid-note-drawer-close:hover {
+    background: var(--background-modifier-hover);
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .grid-note-drawer-editor-wrapper {
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 900px) {
+    .grid-note-drawer-editor-wrapper {
+        max-width: 700px;
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-note-drawer {
+        border-radius: 16px 16px 0 0;
+    }
+    
+    .grid-note-drawer-header {
+        padding: 12px 16px 8px;
+    }
+    
+    .grid-note-drawer-editor {
+        padding: 12px 16px;
+    }
+    
+    .grid-note-drawer-editor-wrapper {
+        max-width: 100%;
+    }
+    
+    
+    .grid-note-drawer-footer {
+        padding: 8px 16px 12px;
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+    
+    .grid-note-drawer-hint {
+        text-align: center;
+        order: 2;
+    }
+    
+    .grid-note-drawer-buttons {
+        order: 1;
+        justify-content: center;
+    }
+}
+
+.grid-note-editor-modal .modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    background: var(--background-primary);
+}
+
+.grid-note-editor-modal .modal-title {
+    /* 标题区域设计 - 缩小高度 */
+    margin: 0;
+    padding: 12px 20px;
+    font-size: var(--font-small);
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--background-secondary);
+    border-bottom: 1px solid var(--background-modifier-border);
+
+    /* 防止文字选择 */
+    user-select: none;
+}
+
+.grid-note-modal-editor-container {
+    /* 编辑器容器设计 - 占满空间 */
+    flex: 1;
+    margin: 0;
+    padding: 10px;
+    border-radius: 0;
+    overflow: hidden;
+    background: var(--background-primary);
+    
+    /* 移除边框和阴影 */
+    box-shadow: none;
+    border: none;
+    
+    /* 过渡动画 */
+    transition: none;
+}
+
+.grid-note-modal-editor-container:hover {
+    box-shadow: none;
+}
+
+.grid-note-editor-modal .modal-button-container {
+    /* 按钮区域设计 - 缩小高度 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--background-secondary);
+    border-top: 1px solid var(--background-modifier-border);
+}
+
+.grid-note-editor-modal .modal-hint {
+    /* 提示文字设计 */
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    font-size: var(--font-smaller);
+    color: var(--text-faint);
+    text-align: left;
+    opacity: 0.7;
+
+    /* 图标 */
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.grid-note-editor-modal .modal-hint::before {
+    content: "⌨";
+    opacity: 0.5;
+    font-size: var(--font-smaller);
+}
+
+/* Modal 内编辑器样式 - 精致设计 */
+.grid-note-modal-editor {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    background: var(--background-primary) !important;
+    font-size: var(--font-text-size) !important;
+}
+
+
+
+/* 编辑器整体滚动条隐藏 */
+.grid-note-modal-editor {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.grid-note-modal-editor::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* 按钮样式优化 - 高级设计 */
+.grid-note-editor-modal .modal-button-container > div {
+    display: flex;
+    gap: 8px;
+}
+
+.grid-note-editor-modal button {
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: var(--font-small);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+
+    /* 防止文字选择 */
+    user-select: none;
+}
+
+.grid-note-editor-modal button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.grid-note-editor-modal button:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.grid-note-editor-modal button.mod-cta {
+    background: linear-gradient(135deg, 
+                var(--interactive-accent) 0%, 
+                var(--interactive-accent-hover) 100%);
+    color: var(--text-on-accent);
+    border: none;
+    box-shadow: 0 2px 8px rgba(var(--color-accent-rgb), 0.3);
+}
+
+.grid-note-editor-modal button.mod-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.4);
+}
+
+.grid-note-editor-modal button.mod-cta:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(var(--color-accent-rgb), 0.3);
+}
+
+.grid-note-editor-modal button.mod-cta-secondary {
+    background: var(--background-primary);
+    color: var(--text-normal);
+    border: 1px solid var(--background-modifier-border);
+    position: relative;
+}
+
+.grid-note-editor-modal button.mod-cta-secondary:hover {
+    background: var(--background-modifier-hover);
+    border-color: var(--background-modifier-border-hover);
+    transform: translateY(-1px);
+}
+
+.grid-note-editor-modal button.mod-cta-secondary:active {
+    transform: translateY(0);
+}
+
+/* 深色主题适配与增强 */
+.theme-dark .grid-note-editor-modal {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5),
+                0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.theme-dark .grid-note-modal-editor-container {
+    background: var(--background-primary);
+}
+
+.theme-dark .grid-note-editor-modal .modal-title {
+    background: var(--background-secondary);
+    border-bottom-color: var(--background-modifier-border);
+}
+
+.theme-dark .grid-note-editor-modal .modal-button-container {
+    background: var(--background-secondary);
+    border-top-color: var(--background-modifier-border);
+}
+
+/* 浅色主题增强 */
+.theme-light .grid-note-editor-modal {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08),
+                0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.theme-light .grid-note-modal-editor-container {
+    background: var(--background-primary);
+}
+
+/* 聚焦状态 - 移除边框高亮 */
+.grid-note-modal-editor-container:focus-within {
+    border: none;
+    box-shadow: none;
+}
+
+/* 响应式设计 - 16:9 比例保持 */
+@media (max-width: 768px) {
+    .grid-note-editor-modal {
+        width: 90vw;
+        height: calc(90vw * 9 / 16);
+        min-width: 320px;
+        min-height: 180px;
+    }
+    
+    .grid-note-modal-editor-container {
+        margin: 0;
+        padding: 8px;
+    }
+    
+    .grid-note-editor-modal .modal-title {
+        padding: 10px 16px;
+        font-size: var(--font-smaller);
+    }
+
+    .grid-note-editor-modal .modal-button-container {
+        padding: 10px 16px;
+    }
+
+    .grid-note-editor-modal button {
+        padding: 5px 12px;
+        font-size: var(--font-smaller);
+    }
+    
+}
+
+/* 超大屏幕优化 */
+@media (min-width: 1440px) {
+    .grid-note-editor-modal {
+        width: 1152px;
+        height: 648px;
+    }
+}
+
+
+/* 加载状态动画 */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.grid-note-modal-editor-container.loading {
+    background: linear-gradient(
+        90deg,
+        var(--background-primary) 0%,
+        var(--background-modifier-hover) 50%,
+        var(--background-primary) 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+}
+
+/* 编辑弹框重置样式 - 移除所有默认padding和margin */
+.grid-note-editor-modal .modal-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+.grid-note-editor-modal {
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* 编辑器容器样式 - flex布局 */
+.grid-note-modal-editor-container {
+    padding: 0 20px !important;
+    flex: 1 1 0% !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+}
+
+/* 编辑器内部样式 */
+.grid-note-modal-editor-container .grid-note-modal-editor {
+    flex: 1 !important;
+    overflow: auto !important;
+    min-height: 0 !important;
+}
+
+/* 按钮区域样式 */
+.grid-note-modal-button-area {
+    flex-shrink: 0 !important;
+    border-top: 1px solid var(--background-modifier-border);
+    background: var(--background-secondary);
+    padding: 0 !important;
+}
+
+/* 按钮区域内的Setting样式调整 */
+.grid-note-modal-button-area .setting-item {
+    border: none !important;
+    padding: 12px 20px !important;
+    margin: 0 !important;
+    background: transparent !important;
+}
+
+.grid-note-modal-button-area .setting-item-control {
+    justify-content: flex-end !important;
+    gap: 10px !important;
+}
+.grid-note-modal-editor-container .markdown-embed-link {
+    display: none !important;
+}
+
+/* 编辑器滚动条隐藏但保留滚动功能 */
+.grid-note-modal-editor-container .cm-editor {
+    overflow: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE */
+    font-size: var(--font-text-size) !important;
+}
+
+.grid-note-modal-editor-container .cm-editor::-webkit-scrollbar {
+    display: none; /* Webkit browsers */
+}
+
+.grid-note-modal-editor-container .cm-scroller {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE */
+}
+
+.grid-note-modal-editor-container .cm-scroller::-webkit-scrollbar {
+    display: none; /* Webkit browsers */
+}
+
+.modal-button-container {
+    margin: 0 !important;
 }
