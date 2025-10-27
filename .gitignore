@@ -17,8 +17,6 @@ logo.svg
 
 *.log
 
-main.js
-main.js.map
 
 data.json
 .env
