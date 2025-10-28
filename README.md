@@ -2,6 +2,11 @@
 
 > **An innovative Obsidian plugin that combines Cornell Note-Taking, Mind Mapping, and Zettelkasten methods to revolutionize how you organize and absorb knowledge.**
 
+> ⚠️ **Important Disclosures:**
+> - **Closed Source:** This plugin is closed-source software
+> - **Payment:** Core features are free. Advanced features (dual-view mode, inline editing) require a paid Pro license
+> - **Network Use:** Pro license activation requires internet connection to verify purchase
+
 [![Light Theme](images/image-white.png)](images/image-white.png)
 
 [![Dark Theme](images/image-black.png)](images/image-black.png)
@@ -140,13 +145,31 @@ GridNote respects your Obsidian settings:
 
 ---
 
+## 🔒 Privacy & Network Usage
+
+### Privacy
+- **No Telemetry:** This plugin does not collect usage data or analytics
+- **Local Processing:** All note processing happens on your device
+- **No Tracking:** No user behavior tracking or third-party analytics
+
+### Network Usage
+This plugin connects to remote services only for:
+- **Pro License Validation:** Verifies Pro license activation status
+  - **Server:** License verification endpoint
+  - **Data Sent:** License key only (no personal information, no vault content)
+  - **Frequency:** On plugin startup and license activation
+  - **Required for:** Pro features only (free features work fully offline)
+
+**Note:** No account registration is required. All vault content remains private and offline.
+
+---
+
 ## 🔧 Technical Details
 
-- **Platform** - Desktop, Tablet, and Mobile
+- **Platform** - Desktop only (mobile support planned)
 - **Minimum Obsidian Version** - 0.15.0+
 - **File Format** - Standard Markdown (.md)
 - **Performance** - Optimized for documents up to 10,000+ lines
-- **Privacy** - All processing happens locally, no data collection
 
 ---
 
@@ -180,7 +203,7 @@ GridNote is a closed-source plugin. Free version available with core features. P
 
 **Transform how you learn, think, and organize knowledge.**
 
-**[Install GridNote Today](obsidian://show-plugin?id=gird-note)**
+**[Install GridNote Today](obsidian://show-plugin?id=grid-note)**
 
 ---
 
