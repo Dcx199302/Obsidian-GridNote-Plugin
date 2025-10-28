@@ -27,3 +27,6 @@ package.json
 pnpm-lock.yaml
 
 scripts/
+
+# Compiled release files
+main.js
