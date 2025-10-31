@@ -1,3 +1,15 @@
+/* Obsidian 字体适配 */
+.grid-note-screenshot-modal,
+.grid-note-screenshot-modal .modal-content,
+.grid-note-editor-modal,
+.grid-note-editor-modal .modal-content,
+.grid-note-modal-editor,
+.grid-note-modal-editor-container,
+.grid-note-modal-button-area {
+    font-family: var(--font-text), var(--font-interface), system-ui, -apple-system, sans-serif;
+    line-height: var(--line-height-normal);
+}
+
 /* 1. 分享图片弹框 (ScreenshotModal) */
 .grid-note-screenshot-modal .modal-content {
     display: flex;
