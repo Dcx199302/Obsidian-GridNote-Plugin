@@ -1,207 +1,147 @@
-# GridNote - Transform Your Markdown into Focused Knowledge Cards
+# GridNote – Structured Knowledge at Card-Level Focus
 
-> **An innovative Obsidian plugin that combines Cornell Note-Taking, Mind Mapping, and Zettelkasten methods to revolutionize how you organize and absorb knowledge.**
+> **Obsidian’s Cornell-style tree view that keeps your Markdown in sync while you read, learn, and edit in focused cards.**
 
-> ⚠️ **Important Disclosures:**
-> - **Closed Source:** This plugin is closed-source software
-> - **Payment:** Core features are free. Advanced features (dual-view mode, inline editing) require a paid Pro license
-> - **Network Use:** Pro license activation requires internet connection to verify purchase
+> ⚠️ **Important Disclosures**
+> - **Closed source:** The public release is compiled code only.
+> - **Free vs Pro:** Tree reading, copying, and search are free. Inline/dual editing, tier controls, quick switching, and screenshot export require a paid GridNote Pro license.
+> - **Network:** Only Pro activation/verification uses the internet. Your notes never leave your vault.
 
 [![Light Theme](images/image-white.png)](images/image-white.png)
 
 [![Dark Theme](images/image-black.png)](images/image-black.png)
 
-## 🎯 What is GridNote?
+## 🌳 What Makes GridNote Different?
 
-GridNote transforms your traditional linear Markdown documents into an intuitive **tree-structured card system**. By breaking down your notes into hierarchical, focused segments, GridNote helps you:
-
-- **📚 Learn More Effectively** - Focus on one concept at a time without distraction
-- **🧠 Think More Clearly** - Visual hierarchy reveals the structure of your knowledge
-- **✍️ Take Better Notes** - Combines proven note-taking methodologies in one tool
-- **🔍 Navigate Faster** - Quickly find and jump to any section in large documents
+- **Cornell-inspired tree cards** – Every heading becomes a cue column + content card so you can skim the outline and dive into details without leaving context.
+- **Always-synced editing** – GridNote sits on top of the native Markdown view, keeps folds, and automatically inserts a missing H1 so documents stay well-formed.
+- **Productivity toolbar** – Floating controls for search, undo/redo, keyboard cheatsheet, plus Pro-only depth and quick file switching from anywhere in the document.
+- **Share-ready output** – Copy plain or rich text per card, or open the screenshot composer to export depth-limited cards as polished images.
 
 ---
 
-## 🌟 Core Features
+## 🧭 Feature Tour
 
-### 1️⃣ Tree-Structured View
+### Tree-Structured Cornell Cards
+- Converts headings (H1–H6) into hierarchical “cue + detail” lanes so long documents stay scannable.
+- Collapsible columns remember their fold state per file via `FoldStateManager`, even after you reorder headings.
+- Internal Obsidian links remain clickable; GridNote routes them back to the editor when needed.
 
-Transform flat Markdown documents into collapsible tree hierarchies:
+### Editing & Dual View
+- Click a selected card to edit: Pro users edit inline with syntax-highlighted CodeMirror, while free users open the synced right-hand editor via `FallbackEditorManager`.
+- Double-click headers (or press `T`) to rename without leaving the tree. GridNote rewrites the underlying Markdown line and saves automatically.
+- Quick-add buttons (or `Ctrl/Cmd+Shift+↑/↓/→`) insert siblings/children with correct heading depth and spacing.
+- Modal editing leverages the embeddable editor for focused changes when you do not want to leave the tree.
 
-- **5 Depth Levels** - Adjust view complexity from H1-only to full H6 depth
-- **Smart Folding** - Collapse/expand sections with persistent state
-- **Visual Hierarchy** - See your document's structure at a glance
-- **Focus Mode** - Concentrate on individual cards without scrolling
+### Search, Navigation & Shortcuts
+- Floating search (`Ctrl/Cmd+F` or `Ctrl/Cmd+K`) highlights every match across cards, keeps a live counter, and jumps with ↑/↓ or Enter/Shift+Enter.
+- Keyboard navigation mirrors a mind map: arrow keys walk between parents, siblings, or children, and `F` selects the first visible card.
+- Press `K` to open the in-app shortcuts overlay. Undo/redo buttons stay in sync with the underlying editor history and auto-scroll to the last changed node.
 
-### 2️⃣ Integrated Note-Taking Methods
+### Copy & Share
+- Copy the whole document, the current card, or its entire subtree as plain Markdown.
+- Need styling? Copy rendered HTML/Rich Text, perfect for pasting into mail, slides, or wikis.
+- Each header menu also exposes “Share as image,” which launches the screenshot composer described below.
 
-GridNote seamlessly combines three powerful methodologies:
+### Screenshot Composer (Pro)
+- Capture any heading (and optional descendants) as a responsive Cornell layout image.
+- Adjust visible depth (1–5), font size, width, and selectively hide/show children before exporting.
+- Save directly to your vault (default folder: `GridNote-Screenshots`), copy to clipboard, or download locally via the bundled Snapdom renderer.
 
-#### 📝 Cornell Note-Taking System
-[![Cornell Method](images/image-share-black.png#gh-dark-mode-only)](images/image-share-black.png)
-[![Cornell Method](images/image-share-white.png#gh-light-mode-only)](images/image-share-white.png)
+### Mobile & Scale-Aware Layout
+- Automatic device detection keeps the layout readable on tablets or sidecar setups by scaling to 70–95% without breaking hit targets.
+- Floating toolbar respects safe areas, and every component forces `pointer-events: auto` so scaled views remain interactive.
 
-- **Notes Area (Right)** - Main content in expandable cards
-- **Cue Column (Left)** - Headers and keywords for quick scanning
-- **Summary (Bottom)** - Overview section for each card
-
-#### 🗂️ Zettelkasten Card System
-
-- **Atomic Notes** - Each section becomes a focused knowledge card
-- **Link Preservation** - Internal links work seamlessly
-- **Quick Navigation** - Jump between related concepts instantly
-
-#### 🗺️ Mind Mapping
-
-- **Hierarchical Structure** - Visual representation of thought organization
-- **Expandable Branches** - Explore deep into topics progressively
-- **Overview & Detail** - Switch between bird's-eye view and focused reading
-
-### 3️⃣ Powerful Editing Capabilities
-
-- **Inline Editing** - Edit cards directly in tree view (Pro)
-- **Live Preview** - Changes sync instantly with source file
-- **Markdown Support** - Full formatting, code blocks, images, LaTeX
-- **Image Layout** - Custom positioning with `left:`, `right:`, `center:` prefixes
-
-### 4️⃣ Enhanced Reading Experience
-
-- **Search & Highlight** - Find text across all cards with navigation
-- **Responsive Design** - Works on desktop, tablet, and mobile
-- **Theme Integration** - Respects Obsidian's font settings and colors
-- **Performance Optimized** - Smooth experience even with large documents
+### Reliability & Performance
+- `md2tree` plus incremental caching handles 10,000+ line files while diffing only the changed ranges.
+- Fold states are recomputed by header text, so your collapsed outline survives reorganizing or undo/redo storms.
+- A background `ViewToggleManager` keeps GridNote embedded in the native Markdown view, so you do not pay the cost of opening a second pane.
 
 ---
 
-## 💎 Pro Features
+## 💎 Free vs. GridNote Pro
 
-Unlock advanced capabilities with GridNote Pro:
+| Capability | Free | Pro |
+| --- | :---: | :---: |
+| Cornell tree reading & folding | ✅ | ✅ |
+| Full-text search, highlights, keyboard overlay | ✅ | ✅ |
+| Copy plain or rendered text | ✅ | ✅ |
+| Inline editing from cards | ❌ | ✅ |
+| Smart dual-view (tree + right editor kept in sync) | ⚠️ opens fallback editor | ✅ stays inline/linked |
+| Depth/tier controls & quick file switch | ❌ | ✅ |
+| Insert siblings/children via toolbar shortcuts | ✅ | ✅ |
+| Screenshot composer export (clipboard/vault/local) | preview only | ✅ |
+| Priority fixes + early feature access | ❌ | ✅ |
 
-- ✨ **Dual-View Mode** - Tree structure + Markdown editor side-by-side
-- ✏️ **Inline Editing** - Modify content directly in card view
-- 🚀 **Priority Support** - Faster bug fixes and feature updates
-- 🎁 **Future Features** - Early access to upcoming enhancements
-
----
-
-## 📖 Use Cases
-
-### For Students
-- Break down textbook chapters into digestible cards
-- Create structured study guides with Cornell method
-- Review complex topics section by section
-
-### For Researchers
-- Organize literature notes hierarchically
-- Link related concepts across documents
-- Build knowledge networks with Zettelkasten approach
-
-### For Writers
-- Outline books and articles in card format
-- Reorganize content structure visually
-- Focus on individual sections during editing
-
-### For Knowledge Workers
-- Structure meeting notes by topics
-- Create hierarchical documentation
-- Build personal knowledge bases systematically
+`⚠️` Free users still edit safely: clicking a selected node opens the synced Markdown view on the right so nothing is locked away.
 
 ---
 
 ## 🚀 Getting Started
 
 ### Installation
+1. Install → Enable.
+2. Use the tree icon in the left ribbon (or the status bar toggle) to switch the active Markdown file into GridNote mode.
 
-1. Open Obsidian Settings
-2. Navigate to **Community Plugins**
-3. Search for **"GridNote"**
-4. Click **Install** and then **Enable**
+### Basic Workflow
+1. Structure your document with headings (H1–H6). GridNote auto-inserts a safe H1 if one is missing, without touching existing frontmatter.
+2. Click any header in the cue column to focus its card; tap again to edit (Pro) or to pop the linked editor (Free).
+3. Use the floating toolbar to search, undo/redo, or show shortcuts. Keep heading depth manageable by collapsing or by lowering the tier (Pro).
+4. Copy or share from the header menu, or press `Ctrl/Cmd+Shift+→` to add children on the fly.
 
-### Basic Usage
-
-1. **Open a Markdown file** in Obsidian
-2. **Click the GridNote ribbon icon** (tree icon in left sidebar)
-3. **Adjust depth level** using the header controls (1-5)
-4. **Click cards to expand/collapse** and explore your content
-5. **Use search** to find and highlight text across cards
-
-### Tips
-
-- 📌 Use headers (H1-H6) to structure your documents for best results
-- 🔍 Combine with Obsidian's native features like tags and links
-- 💡 Experiment with depth levels to find your preferred view
-- ⚡ Use keyboard shortcuts for faster navigation
+### Activating GridNote Pro
+1. Purchase a license at [gridnote.cn](https://gridnote.cn/#/landing). One order unlocks up to **3 devices**.
+2. In **Settings → GridNote**, copy your device ID (auto-generated) and enter the order number.
+3. GridNote encrypts the activation in localStorage, re-validates every 7 days, and syncs the status to `data.json`. Mobile builds honor the stored flag even if localStorage is unavailable.
+4. Need to force a check? Use **Refresh verification** inside the settings tab.
 
 ---
 
-## 🎨 Customization
+## ⚙️ Settings & Customization
 
-GridNote respects your Obsidian settings:
-
-- **Font Size** - Automatically follows Settings → Appearance → Font size
-- **Themes** - Works with all Obsidian themes (light & dark)
-- **Colors** - Uses theme-defined highlight and accent colors
-- **Layout** - Adapts to different screen sizes and orientations
+- **Screenshot folder:** Pick the vault-relative folder used by the composer (default `GridNote-Screenshots`).
+- **Toolbar depth controls (Pro):** Fine-tune the number of visible tiers or lock the view to only top-level sections when presenting.
+- **Quick file switch (Pro):** Launch Obsidian’s command palette filtered to Markdown files directly from the toolbar.
+- **Keyboard overlay:** Tap the keyboard icon or press `K` to see all navigation, editing, and insertion shortcuts in one place.
+- **Modal editor:** From any header menu choose “Edit in modal” to open an embeddable CodeMirror focused on just that subtree.
 
 ---
 
 ## 🔒 Privacy & Network Usage
 
-### Privacy
-- **No Telemetry:** This plugin does not collect usage data or analytics
-- **Local Processing:** All note processing happens on your device
-- **No Tracking:** No user behavior tracking or third-party analytics
-
-### Network Usage
-This plugin connects to remote services only for:
-- **Pro License Validation:** Verifies Pro license activation status
-  - **Server:** License verification endpoint
-  - **Data Sent:** License key only (no personal information, no vault content)
-  - **Frequency:** On plugin startup and license activation
-  - **Required for:** Pro features only (free features work fully offline)
-
-**Note:** No account registration is required. All vault content remains private and offline.
+- **No telemetry:** GridNote never sends usage analytics, headings, or vault content anywhere.
+- **All parsing is local:** `md2tree`, folding, search, screenshots, and image previews run entirely inside Obsidian.
 
 ---
 
-## 🔧 Technical Details
+## 🧰 Technical Details
 
-- **Platform** - Desktop only (mobile support planned)
-- **Minimum Obsidian Version** - 0.15.0+
-- **File Format** - Standard Markdown (.md)
-- **Performance** - Optimized for documents up to 10,000+ lines
-
----
-
-## 📝 Note-Taking Philosophy
-
-GridNote is built on the principle that **knowledge is better absorbed in focused, structured chunks** rather than long, continuous text. By combining:
-
-- **Cornell's** emphasis on active recall and summary
-- **Zettelkasten's** atomic note and linking approach
-- **Mind Mapping's** visual hierarchy and organization
-
-GridNote creates an environment where you can **think clearly, learn deeply, and build lasting knowledge**.
+- **Version:** 1.1.16  
+- **Platform:** Desktop Obsidian (flagged `isDesktopOnly: true`). Tablet scaling is optimized for Sidecar/Stage Manager, with native mobile support under active development.  
+- **Minimum Obsidian:** 0.15.0+  
+- **Files:** Standard `.md` stored in your vault.  
+- **Performance tooling:** Tree cache, virtualized rendering, viewport-aware highlights, and undo-aware re-rendering keep large projects smooth.  
+- **Image preview:** Clicking an image while in preview opens Obsidian’s native modal via the bundled `imagePreview` action.
 
 ---
 
 ## 💬 Support & Feedback
 
-- **Issues** - Report bugs on [GitHub Issues](https://github.com/Dcx199302/Obsidian-GridNote-Plugin/issues)
-- **Discussions** - Share ideas in [GitHub Discussions](https://github.com/Dcx199302/Obsidian-GridNote-Plugin/discussions)
-- **Updates** - Follow releases on [GitHub](https://github.com/Dcx199302/Obsidian-GridNote-Plugin/releases)
+- **Issues:** [GitHub Issues](https://github.com/Dcx199302/Obsidian-GridNote-Plugin/issues)  
+- **Ideas & discussions:** [GitHub Discussions](https://github.com/Dcx199302/Obsidian-GridNote-Plugin/discussions)  
+- **Product updates & purchasing:** [gridnote.cn](https://gridnote.cn/#/landing)
 
 ---
 
 ## 📄 License
 
-GridNote is a closed-source plugin. Free version available with core features. Pro license unlocks advanced capabilities.
+GridNote is distributed as closed-source software. The reading experience is free; a Pro license is required to unlock inline/dual editing, depth controls, screenshot exports, and premium support.
 
 ---
 
 <div align="center">
 
-**Transform how you learn, think, and organize knowledge.**
+**Transform how you study, write, and think — one focused card at a time.**
 
 **[Install GridNote Today](obsidian://show-plugin?id=grid-note)**
 
