@@ -1,7 +1,7 @@
 {
 	"id": "grid-note",
 	"name": "Grid Note",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"minAppVersion": "0.15.0",
 	"description": "Innovative tool merging mind mapping, Zettelkasten & Cornell notes. Tree-structured cards reconstruct knowledge, clarify thoughts & enhance focused learning. (closed source)",
 	"author": "ChengDong Xu",
