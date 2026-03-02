@@ -307,3 +307,19 @@
 	color: var(--text-muted);
 	font-size: 13px;
 }
+
+/* 搜索高亮样式 */
+.search-highlight {
+	background: var(--text-highlight-bg);
+	/* color: var(--text-on-accent); */
+	border-radius: 2px;
+	box-shadow: 0 0 0 2px var(--text-highlight-bg);
+}
+
+.search-current {
+	background: var(--text-selection);
+	color: var(--text-normal);
+	box-shadow: 0 0 0px 3px var(--text-accent);
+	border-radius: 2px;
+	/* border: 2px solid var(--text-accent); */
+}
