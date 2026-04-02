@@ -1,74 +1,183 @@
-/* Obsidian 字体适配 */
-.grid-note-screenshot-modal,
-.grid-note-screenshot-modal .modal-content,
-.grid-note-editor-modal,
-.grid-note-editor-modal .modal-content,
-.grid-note-modal-editor,
-.grid-note-modal-editor-container,
-.grid-note-modal-button-area {
-    font-family: var(--font-text), var(--font-interface), system-ui, -apple-system, sans-serif;
-    line-height: var(--line-height-normal);
-}
+/* 插件样式文件 */
 
-/* 1. 分享图片弹框 (ScreenshotModal) */
-.grid-note-screenshot-modal .modal-content {
+/* GridNote 视图样式 */
+.gridnote-view-container {
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow: hidden;
-    padding: 0;
+    overflow: visible;
 }
 
-.grid-note-screenshot-modal .modal-header {
+.markdown-source-view.gridnote-markdown-native-hidden,
+.markdown-reading-view.gridnote-markdown-native-hidden {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    overflow: hidden;
+    contain: strict;
+    content-visibility: hidden;
+    contain-intrinsic-size: 0 0;
+}
+
+.workspace-leaf-content[data-type="markdown"] .view-content.gridnote-markdown-mode-enabled {
+    position: relative;
+    overflow: visible;
+}
+
+.gridnote-markdown-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--background-primary);
+    overflow: visible;
+    contain: layout style;
+}
+
+.gridnote-markdown-mode-action.is-active {
+    color: var(--interactive-accent);
+}
+
+.gridnote-header {
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 20px 16px 20px;
     border-bottom: 1px solid var(--background-modifier-border);
 }
 
-.grid-note-screenshot-modal .modal-title {
-    /* font-size: 1em; */
+.gridnote-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.gridnote-title {
+    margin: 0;
+    font-size: 1.5em;
+    color: var(--text-normal);
+}
+
+.gridnote-badge {
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
     font-weight: 500;
 }
 
-.grid-note-screenshot-preview-container {
+.gridnote-content {
     flex: 1;
-    overflow: auto;
-    min-height: 0;
-    padding: 0;
+    overflow-y: auto;
+    padding: 20px;
+    line-height: 1.6;
 }
 
-.grid-note-screenshot-modal .modal-button-container {
-    flex-shrink: 0;
-    padding: 16px;
-    border-top: 1px solid var(--background-modifier-border);
+.gridnote-content h1 {
+    color: var(--text-normal);
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+.gridnote-content h2 {
+    color: var(--text-normal);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.gridnote-content h3 {
+    color: var(--text-muted);
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.gridnote-content p {
+    margin-bottom: 12px;
+    color: var(--text-normal);
+}
+
+.gridnote-content li {
+    margin-bottom: 4px;
+    color: var(--text-normal);
+}
+
+/* Frontmatter 样式 */
+.frontmatter-container {
+    margin-bottom: 20px;
+    padding: 12px 16px;
     background: var(--background-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--background-modifier-border);
 }
 
-.grid-note-screenshot-modal .modal-button-container .setting-item {
-    border: none;
-    padding: 0;
-    margin: 0;
-}
-
-.grid-note-screenshot-modal .modal-button-container .setting-item-info {
-    display: none;
-}
-
-.grid-note-screenshot-modal .modal-button-container .setting-item-control {
-    flex: 1;
-    justify-content: flex-start;
+.frontmatter-section {
+    display: flex;
+    flex-direction: column;
     gap: 8px;
 }
 
-.grid-note-screenshot-modal .depth-label-text,
-.grid-note-screenshot-modal .font-size-label-text {
-    /* font-size: 0.875em; */
-    color: var(--text-muted);
-    padding: 0 6px;
+.frontmatter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
+.frontmatter-key {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 100px;
+}
 
-/* 2. 编辑节点内容弹框 (EditorModal) */
-.grid-note-editor-modal .modal-content {
+.frontmatter-key-label {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+
+.frontmatter-key-icon {
+    color: var(--text-faint);
+    width: 16px;
+    height: 16px;
+}
+
+.frontmatter-value {
+    color: var(--text-normal);
+    font-size: 0.9em;
+}
+
+.frontmatter-value-item {
+    background: var(--background-modifier-hover);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+}
+
+.frontmatter-value-separator {
+    color: var(--text-faint);
+}
+
+/* GridNote 标题颜色覆盖模板
+   用户可直接修改下面变量来自定义各级标题颜色 */
+.gridnote-shell {
+    --gridnote-heading-color-default: rgb(var(--color-green-rgb));
+    --gridnote-heading-color-h1: var(--gridnote-heading-color-default);
+    --gridnote-heading-color-h2: var(--gridnote-heading-color-default);
+    --gridnote-heading-color-h3: var(--gridnote-heading-color-default);
+    --gridnote-heading-color-h4: var(--gridnote-heading-color-default);
+    --gridnote-heading-color-h5: var(--gridnote-heading-color-default);
+    --gridnote-heading-color-h6: var(--gridnote-heading-color-default);
+}
+
+.gridnote-range-editor-modal .modal-content {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -76,250 +185,783 @@
     padding: 0;
 }
 
-.grid-note-editor-modal .modal-header {
+.gridnote-range-editor-modal .modal-header {
     flex-shrink: 0;
-    border-bottom: 1px solid var(--background-modifier-border);
+    border-bottom: none;
 }
 
-.grid-note-editor-modal .modal-title {
-    /* font-size: 1em; */
-    font-weight: 500;
-}
-
-.grid-note-modal-editor-container {
-    flex: 1;
-    overflow: auto;
-    padding: 5px;
-    min-height: 0;
-    /* background: var(--background-primary); */
-}
-
-.grid-note-modal-editor-container .cm-scroller {
-    padding: 0px 150px;
-}
-
-.grid-note-modal-button-area {
-    flex-shrink: 0;
-    padding: 5px;
-    border-top: 1px solid var(--background-modifier-border);
-    /* background: var(--background-secondary); */
-}
-
-.grid-note-modal-button-area .setting-item {
-    border: none;
-    padding: 0;
-    margin: 0;
-}
-
-.grid-note-modal-button-area .setting-item-info {
+.gridnote-range-editor-modal .modal-title {
     display: none;
 }
 
-.grid-note-modal-button-area .setting-item-control {
+.gridnote-range-editor-modal .inline-title,
+.gridnote-range-editor-modal .markdown-embed-link {
+    display: none !important;
+}
+
+.gridnote-range-editor-modal .markdown-embed {
+    border-inline-start: 0 !important;
+}
+
+.gridnote-range-editor-container {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 8px;
+}
+
+.gridnote-range-editor {
+    width: 100%;
+    min-height: 100%;
+    background: var(--background-primary);
+    color: var(--text-normal);
+}
+
+.gridnote-range-editor .cm-editor {
+    height: 100%;
+    min-height: 100%;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius-s);
+    background: var(--background-primary);
+    font-size: var(--font-text-size) !important;
+}
+
+.gridnote-range-editor .cm-scroller {
+    min-height: 100%;
+    padding: 16px 24px;
+    font-family: var(--font-text);
+    line-height: var(--line-height-normal);
+}
+
+.gridnote-range-editor-container textarea.gridnote-range-editor {
+    min-height: 100%;
+}
+
+.gridnote-range-editor-button-area {
+    flex-shrink: 0;
+    padding: 8px;
+    border-top: 1px solid var(--background-modifier-border);
+}
+
+.gridnote-range-editor-button-area .setting-item {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.gridnote-range-editor-button-area .setting-item-info {
+    display: none;
+}
+
+.gridnote-range-editor-button-area .setting-item-control {
     flex: 1;
     justify-content: flex-end;
     gap: 8px;
 }
 
-/* 编辑器样式 */
-.grid-note-modal-editor {
+/* 防止弹框编辑器抖动 */
+.gridnote-range-editor-modal .cm-scroller {
+    padding: 10px;
+    margin: 10px;
+    margin-right: 0;
+}
+
+.gridnote-screenshot-modal .modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.gridnote-screenshot-modal .modal-header {
+    flex-shrink: 0;
+    padding-inline: 20px;
+}
+
+.gridnote-screenshot-modal-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.gridnote-screenshot-preview-container {
+    display: flex;
+    flex: 1;
     width: 100%;
-    min-height: 400px;
-    background: var(--background-primary);
-    color: var(--text-normal);
+    height: 100%;
+    min-height: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.grid-note-modal-editor .cm-editor {
+.gridnote-screenshot-preview-stage {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 100%;
+}
+
+.gridnote-screenshot-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    padding: 20px;
+    border-radius: 4px;
+    background: var(--background-primary);
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.gridnote-screenshot-container {
+    position: relative;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: visible;
+    height: auto;
+    padding: 32px 28px 40px 28px;
+    border: 5px solid transparent;
+    border-radius: 16px;
+    background:
+        linear-gradient(
+            135deg,
+            var(--background-primary) 0%,
+            var(--background-secondary) 100%
+        ) padding-box,
+        linear-gradient(90deg, #6366f1, #8b5cf6, #d946ef) border-box;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    transition: width 0.3s ease;
+}
+
+.gridnote-screenshot-container::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 60px;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(to bottom, transparent 0%, var(--background-primary) 100%);
+}
+
+.gridnote-screenshot-container::after {
+    content: "Generated by GridNote";
+    position: absolute;
+    right: 24px;
+    bottom: 16px;
+    z-index: 3;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--background-primary);
+    font-size: 0.75em;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    opacity: 0.35;
+}
+
+.gridnote-screenshot-container.full-height::before {
+    display: none;
+}
+
+.gridnote-screenshot-container :is(.cardflow-tree-node, .cascade-node) {
+    position: relative;
+    z-index: 1;
+}
+
+.gridnote-screenshot-hide-node-btn {
+    margin-left: 8px;
+    padding: 2px 8px;
     border: 1px solid var(--background-modifier-border);
-    border-radius: var(--radius-s);
-    background: var(--background-primary);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--background-primary) 92%, transparent);
+    color: var(--text-muted);
+    font-size: 11px;
+    line-height: 1.4;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 120ms ease;
 }
 
-.grid-note-modal-editor .cm-scroller {
-    font-family: var(--font-text);
-    line-height: var(--line-height-normal);
+.gridnote-screenshot-container :is(.cardflow-node-heading-row, .cascade-node-heading-row):hover .gridnote-screenshot-hide-node-btn {
+    opacity: 1;
 }
 
-/* 关键修复：强制编辑器使用 Obsidian 字体大小设置 */
-.grid-note-modal-editor-container .cm-editor {
-    font-size: var(--font-text-size) !important;
+.gridnote-screenshot-hide-node-btn:hover {
+    color: var(--text-normal);
+    background: var(--background-modifier-hover);
 }
 
-.grid-note-modal-editor-container .cm-scroller {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE */
-}
-
-.grid-note-modal-editor-container .cm-scroller::-webkit-scrollbar {
-    display: none; /* Webkit browsers */
-}
-
-/* 隐藏嵌入链接 */
-.grid-note-modal-editor-container .markdown-embed-link {
+.gridnote-screenshot-capturing .gridnote-screenshot-hide-node-btn {
     display: none !important;
 }
 
+.gridnote-screenshot-button-area {
+    flex-shrink: 0;
+    padding: 10px 14px 14px;
+    border-top: 1px solid var(--background-modifier-border);
+}
+
+.gridnote-screenshot-button-area .setting-item {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.gridnote-screenshot-button-area .setting-item-info {
+    display: none;
+}
+
+.gridnote-screenshot-button-area .setting-item-control {
+    flex: 1;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.gridnote-screenshot-scale-label {
+    min-width: 48px;
+    text-align: center;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+    .gridnote-screenshot-preview-container {
+        padding: 12px;
+    }
+
+    .gridnote-screenshot-wrapper {
+        padding: 14px;
+    }
+
+    .gridnote-screenshot-container {
+        border-radius: 14px;
+        padding: 24px 18px 30px 18px;
+    }
+}
+
+.gridnote-sibling-switcher {
+    width: min(720px, calc(100vw - 40px));
+}
+
+.gridnote-sibling-switcher .prompt-results {
+    padding-bottom: 0;
+}
+
+.gridnote-sibling-switcher .suggestion-item {
+    margin: 0 6px;
+    border-radius: 12px;
+}
+
+.gridnote-sibling-switcher .suggestion-item.is-selected {
+    background: color-mix(in srgb, var(--interactive-accent) 14%, var(--background-secondary));
+}
+
+.gridnote-sibling-switcher .suggestion-item .suggestion-content {
+    width: 100%;
+}
+
+.gridnote-sibling-switcher .suggestion-item .gridnote-folder-row,
+.gridnote-sibling-switcher .suggestion-item .gridnote-file-row {
+    display: grid;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+}
+
 .gridnote-sibling-switcher .suggestion-item .gridnote-folder-row {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 8px;
-	width: 100%;
+    grid-template-columns: minmax(0, 1fr) auto;
 }
 
 .gridnote-sibling-switcher .suggestion-item .gridnote-file-row {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	width: 100%;
+    grid-template-columns: 16px minmax(0, 1fr) minmax(0, 0.75fr) auto;
 }
 
 .gridnote-sibling-switcher .suggestion-item .gridnote-file-row.is-current-file .gridnote-file-name {
-	color: var(--interactive-accent);
+    color: var(--interactive-accent);
 }
 
-.gridnote-sibling-switcher .suggestion-item .gridnote-file-badge {
-	padding: 2px 6px;
-	border-radius: 999px;
-	background: var(--interactive-accent);
-	color: var(--text-on-accent);
-	font-size: 10px;
-	font-weight: 600;
-	flex-shrink: 0;
+.gridnote-sibling-switcher .suggestion-item .gridnote-file-badge,
+.gridnote-sibling-switcher .suggestion-item .gridnote-folder-match-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--interactive-accent) 18%, var(--background-secondary));
+    color: color-mix(in srgb, var(--interactive-accent) 76%, var(--text-normal));
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    flex-shrink: 0;
 }
 
-.gridnote-sibling-switcher .suggestion-item .gridnote-file-icon {
-	width: 16px;
-	height: 16px;
-	color: var(--text-muted);
-	opacity: 0.7;
-	flex-shrink: 0;
+.gridnote-sibling-switcher .suggestion-item .gridnote-file-icon,
+.gridnote-sibling-switcher .suggestion-item .gridnote-folder-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    opacity: 0.72;
+    flex-shrink: 0;
 }
 
-.gridnote-sibling-switcher .suggestion-item .gridnote-file-icon svg {
-	width: 100%;
-	height: 100%;
+.gridnote-sibling-switcher .suggestion-item .gridnote-file-icon svg,
+.gridnote-sibling-switcher .suggestion-item .gridnote-folder-icon svg {
+    width: 100%;
+    height: 100%;
 }
 
 .gridnote-sibling-switcher .suggestion-item .gridnote-folder-info {
-	flex: 1 1 auto;
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	min-width: 0;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.gridnote-sibling-switcher .suggestion-item .gridnote-folder-icon {
-	width: 16px;
-	height: 16px;
-	color: var(--text-muted);
-	opacity: 0.7;
-	flex-shrink: 0;
+.gridnote-sibling-switcher .suggestion-item .gridnote-folder-name,
+.gridnote-sibling-switcher .suggestion-item .gridnote-file-name,
+.gridnote-sibling-switcher .suggestion-item .gridnote-file-path,
+.gridnote-sibling-switcher .suggestion-item .gridnote-folder-path,
+.gridnote-sibling-switcher .gridnote-current-folder {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.gridnote-sibling-switcher .suggestion-item .gridnote-folder-icon svg {
-	width: 100%;
-	height: 100%;
-}
-
-.gridnote-sibling-switcher .suggestion-item .gridnote-folder-name {
-	flex: 1 1 auto;
-	min-width: 0;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.gridnote-sibling-switcher .suggestion-item .gridnote-file-name {
-	flex: 1 1 auto;
-	min-width: 0;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+.gridnote-sibling-switcher .suggestion-item .gridnote-file-path,
+.gridnote-sibling-switcher .suggestion-item .gridnote-folder-path {
+    color: var(--text-faint);
+    font-size: 12px;
 }
 
 .gridnote-sibling-switcher .suggestion-item .gridnote-folder-path {
-	flex: 0 0 auto;
-	max-width: 55%;
-	text-align: right;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	font-size: 0.85em;
-	color: var(--text-faint);
-	opacity: 0;
-	transition: opacity 120ms ease;
-}
-
-.gridnote-sibling-switcher .suggestion-item.is-selected .gridnote-folder-path {
-	opacity: 1;
+    max-width: 280px;
+    text-align: right;
 }
 
 .gridnote-sibling-switcher .gridnote-switcher-actions {
-	position: sticky;
-	bottom: 0;
-	margin-top: 8px;
-	border-top: 1px solid var(--background-modifier-border);
-	background: var(--background-primary);
+    position: sticky;
+    bottom: 0;
+    margin-top: 8px;
+    border-top: 1px solid color-mix(in srgb, var(--background-modifier-border) 92%, transparent);
+    background: color-mix(in srgb, var(--background-primary) 94%, transparent);
+    backdrop-filter: blur(10px);
 }
 
-.gridnote-sibling-switcher .gridnote-switcher-actions .setting-item {
-	margin: 0;
-	padding: 12px;
-}
-
-.gridnote-sibling-switcher .gridnote-switcher-actions.is-hidden {
-	display: none;
+.gridnote-sibling-switcher .gridnote-switcher-footer.setting-item {
+    margin: 0;
+    padding: 12px 14px;
+    border: none;
 }
 
 .gridnote-sibling-switcher .gridnote-switcher-footer .setting-item-info {
-	min-width: 0;
+    min-width: 0;
+    gap: 4px;
 }
 
-.gridnote-sibling-switcher .gridnote-current-folder {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+.gridnote-sibling-switcher .gridnote-switcher-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.gridnote-sibling-switcher .gridnote-switcher-mode {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--background-secondary-alt);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
 }
 
 .gridnote-sibling-switcher .gridnote-action-button {
-	font-size: var(--font-smaller);
-	white-space: nowrap;
+    min-width: 0;
+    border-radius: 999px;
+    white-space: nowrap;
 }
 
-.gridnote-file-deleted-placeholder {
-	margin: 16px;
-	padding: 18px;
-	border-radius: 10px;
-	border: 1px dashed var(--background-modifier-border);
-	background: var(--background-secondary);
-	text-align: center;
-	line-height: 1.5;
+.gridnote-sibling-switcher .gridnote-switcher-actions.is-folder-mode .gridnote-action-button {
+    display: none;
 }
 
-.gridnote-file-deleted-placeholder .gridnote-placeholder-title {
-	font-weight: 600;
-	margin-bottom: 4px;
-	color: var(--text-normal);
+.gridnote-text-search-modal .modal-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
-.gridnote-file-deleted-placeholder .gridnote-placeholder-desc {
-	color: var(--text-muted);
-	font-size: 13px;
+.gridnote-text-search-shell {
+    --gridnote-search-card-border: color-mix(
+        in srgb,
+        var(--background-modifier-border) 54%,
+        transparent
+    );
+    --gridnote-search-card-surface-top: color-mix(
+        in srgb,
+        var(--background-primary) 99%,
+        white 1%
+    );
+    --gridnote-search-card-surface-bottom: color-mix(
+        in srgb,
+        var(--background-primary) 96%,
+        var(--background-secondary) 4%
+    );
+    --gridnote-search-card-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.02);
+    --gridnote-search-card-title-color: var(--interactive-accent);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    padding: 18px 18px 20px;
+    gap: 16px;
+    background:
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--background-primary) 99%, white 1%),
+            var(--background-primary)
+        ),
+        var(--background-primary);
 }
 
-/* 搜索高亮样式 */
-.search-highlight {
-	background: var(--text-highlight-bg);
-	/* color: var(--text-on-accent); */
-	border-radius: 2px;
-	box-shadow: 0 0 0 2px var(--text-highlight-bg);
+.gridnote-text-search-bar {
+    display: block;
 }
 
-.search-current {
-	background: var(--text-selection);
-	color: var(--text-normal);
-	box-shadow: 0 0 0px 3px var(--text-accent);
-	border-radius: 2px;
-	/* border: 2px solid var(--text-accent); */
+.gridnote-text-search-input-shell {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid color-mix(in srgb, var(--background-modifier-border) 72%, transparent);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--background-primary-alt) 82%, var(--background-secondary));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    box-sizing: border-box;
+}
+
+.gridnote-text-search-input-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--text-faint);
+    pointer-events: none;
+    flex-shrink: 0;
+}
+
+.gridnote-text-search-input-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.gridnote-text-search-input {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 0;
+    border: none !important;
+    border-radius: 0;
+    background: transparent !important;
+    color: var(--text-normal);
+    font-family: inherit;
+    font-size: 14px;
+    box-shadow: none !important;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.gridnote-text-search-input::-webkit-search-decoration,
+.gridnote-text-search-input::-webkit-search-cancel-button,
+.gridnote-text-search-input::-webkit-search-results-button,
+.gridnote-text-search-input::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+    display: none;
+}
+
+.gridnote-text-search-input-shell:focus-within {
+    outline: none;
+    border-color: color-mix(in srgb, var(--interactive-accent) 42%, var(--background-modifier-border));
+    box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--interactive-accent) 10%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.gridnote-text-search-input:focus,
+.gridnote-text-search-input:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
+.gridnote-text-search-summary {
+    flex-shrink: 0;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.gridnote-text-search-results {
+    --gridnote-text-search-columns: 2;
+    min-height: 0;
+    flex: 1;
+    overflow: auto;
+    scrollbar-gutter: stable;
+    padding-inline: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.gridnote-text-search-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gridnote-text-search-group-title {
+    padding: 0 4px 4px;
+    color: color-mix(in srgb, var(--text-muted) 92%, var(--text-faint));
+    font-size: 11px;
+    font-weight: 650;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.gridnote-text-search-group-cards {
+    display: grid;
+    grid-template-columns: repeat(var(--gridnote-text-search-columns), minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+}
+
+.gridnote-text-search-card-column {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.gridnote-text-search-empty {
+    flex: 1;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 1px dashed color-mix(in srgb, var(--background-modifier-border) 64%, transparent);
+    border-radius: 20px;
+    background: color-mix(in srgb, var(--background-secondary) 62%, transparent);
+    color: var(--text-muted);
+    text-align: center;
+    padding: 28px;
+}
+
+.gridnote-text-search-empty[hidden],
+.gridnote-text-search-results[hidden] {
+    display: none !important;
+}
+
+.gridnote-text-search-empty-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--text-faint);
+}
+
+.gridnote-text-search-empty-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.gridnote-text-search-empty-title {
+    color: var(--text-normal);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.gridnote-text-search-empty-copy {
+    max-width: 320px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+.gridnote-text-search-card {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 12px;
+    margin: 0;
+    padding: 15px 15px 16px;
+    border: 1px solid var(--gridnote-search-card-border);
+    border-radius: 16px;
+    background: var(--gridnote-search-card-surface-bottom);
+    color: var(--text-normal);
+    font: inherit;
+    line-height: inherit;
+    text-align: left;
+    text-transform: none;
+    white-space: normal;
+    cursor: pointer;
+    box-sizing: border-box;
+    box-shadow: var(--gridnote-search-card-shadow);
+    transition:
+        transform 0.16s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+}
+
+.gridnote-text-search-card:hover,
+.gridnote-text-search-card:focus-visible {
+    outline: none;
+    transform: none;
+    border-color: color-mix(in srgb, var(--interactive-accent) 18%, var(--background-modifier-border));
+    box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--interactive-accent) 7%, transparent);
+    background: color-mix(in srgb, var(--gridnote-search-card-surface-bottom) 97%, var(--interactive-accent) 3%);
+}
+
+.gridnote-text-search-card.is-selected {
+    outline: none;
+    transform: none;
+    border-color: color-mix(in srgb, var(--interactive-accent) 28%, var(--background-modifier-border));
+    box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--interactive-accent) 12%, transparent);
+    background: color-mix(in srgb, var(--gridnote-search-card-surface-bottom) 94%, var(--interactive-accent) 6%);
+}
+
+.gridnote-text-search-card-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    justify-content: space-between;
+    min-width: 0;
+}
+
+.gridnote-text-search-card-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--background-secondary) 52%, transparent);
+    color: var(--text-faint);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--background-modifier-border) 18%, transparent);
+}
+
+.gridnote-text-search-card-badge.is-line {
+    background: color-mix(in srgb, var(--background-secondary) 58%, transparent);
+    color: color-mix(in srgb, var(--text-muted) 88%, var(--text-faint));
+}
+
+.gridnote-text-search-card-title {
+    flex: 1;
+    min-width: 0;
+    color: var(--gridnote-search-card-title-color);
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1.4;
+    letter-spacing: 0;
+    word-break: break-word;
+}
+
+.gridnote-text-search-card-snippets {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding-top: 2px;
+    border-top: 1px solid color-mix(in srgb, var(--background-modifier-border) 30%, transparent);
+}
+
+.gridnote-text-search-card-snippet {
+    color: color-mix(in srgb, var(--text-muted) 92%, var(--text-faint));
+    font-size: 12px;
+    line-height: 1.62;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.gridnote-text-search-card-snippet:first-child {
+    color: color-mix(in srgb, var(--text-normal) 58%, var(--text-muted));
+}
+
+.gridnote-text-search-card mark {
+    padding: 0 3px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--interactive-accent) 14%, var(--background-secondary));
+    color: var(--text-normal);
+    box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--interactive-accent) 18%, transparent);
+}
+
+@media (max-width: 640px) {
+    .gridnote-sibling-switcher {
+        width: min(100vw - 24px, 640px);
+    }
+
+    .gridnote-sibling-switcher .suggestion-item .gridnote-file-row {
+        grid-template-columns: 16px minmax(0, 1fr) auto;
+    }
+
+    .gridnote-sibling-switcher .suggestion-item .gridnote-file-path {
+        display: none;
+    }
+
+    .gridnote-sibling-switcher .gridnote-switcher-footer.setting-item {
+        padding-inline: 12px;
+    }
+
+    .gridnote-text-search-shell {
+        padding: 14px 14px 16px;
+    }
+
+    .gridnote-text-search-card-title-row {
+        gap: 8px;
+    }
+
+    .gridnote-text-search-results {
+        --gridnote-text-search-columns: 1;
+    }
+}
+
+@media (min-width: 1920px) {
+    .gridnote-text-search-results {
+        --gridnote-text-search-columns: 3;
+    }
+}
+
+@media (min-width: 2560px) {
+    .gridnote-text-search-results {
+        --gridnote-text-search-columns: 4;
+    }
 }
