@@ -332,6 +332,7 @@ body.theme-dark .gridnote-shell {
     box-sizing: border-box;
     overflow: visible;
     height: auto;
+    font-family: var(--font-text), var(--font-interface), sans-serif;
     padding: 32px 28px 40px 28px;
     border: 5px solid transparent;
     border-radius: 16px;
@@ -371,6 +372,10 @@ body.theme-dark .gridnote-shell {
     font-weight: 500;
     letter-spacing: 0.8px;
     opacity: 0.35;
+}
+
+.gridnote-screenshot-container.no-watermark::after {
+    display: none;
 }
 
 .gridnote-screenshot-container.full-height::before {
@@ -416,6 +421,11 @@ body.theme-dark .gridnote-shell {
 
 .gridnote-screenshot-capturing .gridnote-screenshot-hide-node-btn {
     display: none !important;
+}
+
+.gridnote-screenshot-container img[data-gridnote-rasterized-svg] {
+    max-width: 100%;
+    height: auto;
 }
 
 /* Screenshot modal: heading is just eye-off icon + title text */
