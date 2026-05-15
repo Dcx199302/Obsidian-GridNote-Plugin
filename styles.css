@@ -165,16 +165,23 @@
     color: var(--text-faint);
 }
 
-/* GridNote 标题颜色覆盖模板
-   用户可直接修改下面变量来自定义各级标题颜色 */
+/* GridNote 标题颜色
+   CSS 变量设在 document.documentElement 上，设置修改后立即生效 */
 .gridnote-shell {
-    --gridnote-heading-color-default: rgb(var(--color-green-rgb));
     --gridnote-heading-color-h1: var(--gridnote-heading-color-default);
     --gridnote-heading-color-h2: var(--gridnote-heading-color-default);
     --gridnote-heading-color-h3: var(--gridnote-heading-color-default);
     --gridnote-heading-color-h4: var(--gridnote-heading-color-default);
     --gridnote-heading-color-h5: var(--gridnote-heading-color-default);
     --gridnote-heading-color-h6: var(--gridnote-heading-color-default);
+}
+
+body.theme-light .gridnote-shell {
+    --gridnote-heading-color-default: var(--gridnote-heading-color-light, var(--h1-color));
+}
+
+body.theme-dark .gridnote-shell {
+    --gridnote-heading-color-default: var(--gridnote-heading-color-dark, var(--h1-color));
 }
 
 .gridnote-range-editor-modal .modal-content {

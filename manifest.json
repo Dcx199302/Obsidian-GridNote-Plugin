@@ -1,7 +1,7 @@
 {
 	"id": "grid-note",
 	"name": "Grid Note",
-	"version": "2.0.4",
+	"version": "2.0.5",
 	"minAppVersion": "0.15.0",
 	"description": "Focused tree-card Markdown view with inline editing, search, screenshots, and theme-based navigation.",
 	"author": "ChengDong Xu",
