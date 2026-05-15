@@ -177,11 +177,11 @@
 }
 
 body.theme-light .gridnote-shell {
-    --gridnote-heading-color-default: var(--gridnote-heading-color-light, var(--h1-color));
+    --gridnote-heading-color-default: var(--gridnote-heading-color-light, #1e1e1e);
 }
 
 body.theme-dark .gridnote-shell {
-    --gridnote-heading-color-default: var(--gridnote-heading-color-dark, var(--h1-color));
+    --gridnote-heading-color-default: var(--gridnote-heading-color-dark, #e0e0e0);
 }
 
 .gridnote-range-editor-modal .modal-content {
