@@ -1085,3 +1085,22 @@ body.theme-dark .gridnote-shell {
     max-height: 900px;
     min-height: 500px;
 }
+
+/* PromptModal / ConfirmModal */
+.gridnote-prompt-input {
+    width: 100%;
+    margin: 0 0 0.75rem;
+    padding: 0.4rem 0.6rem;
+}
+
+.modal:has(.gridnote-prompt-input) .setting-item {
+    border-top: none;
+    padding-top: 0;
+}
+
+/* Breadcrumb 根图标：跟随文字字号并留右边距 */
+.gridnote-ft-breadcrumb-item svg {
+    width: var(--font-ui-small, 13px);
+    height: var(--font-ui-small, 13px);
+    margin-right: 4px;
+}
