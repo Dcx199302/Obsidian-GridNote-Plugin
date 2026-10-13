@@ -23,7 +23,7 @@
     contain-intrinsic-size: 0 0;
 }
 
-.workspace-leaf-content[data-type="markdown"] .view-content.gridnote-markdown-mode-enabled {
+.workspace-leaf-content[data-type="markdown"].gridnote-markdown-mode-enabled > .view-content {
     position: relative;
     overflow: visible;
 }
@@ -32,13 +32,25 @@
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: var(--background-primary);
+    background: transparent;
     overflow: visible;
     contain: layout style;
 }
 
 .gridnote-markdown-mode-action.is-active {
     color: var(--interactive-accent);
+}
+
+/* GridNote 模式下 Header 操作按钮不显示官方 active 态底色。 */
+.workspace-leaf-content[data-type="markdown"].gridnote-markdown-mode-enabled
+    > .view-header
+    .view-actions
+    .clickable-icon.is-active,
+.workspace-leaf-content[data-type="markdown"].gridnote-markdown-mode-enabled
+    > .view-header
+    .view-actions
+    .clickable-icon.has-active-menu {
+    background-color: transparent;
 }
 
 .gridnote-header {
@@ -165,8 +177,8 @@
     color: var(--text-faint);
 }
 
-/* GridNote 标题颜色
-   CSS 变量设在 document.documentElement 上，设置修改后立即生效 */
+/* GridNote Markdown View 的公开颜色变量。
+   默认值写在消费处，用户可在 body.theme-light / body.theme-dark 上通过 CSS snippets 覆盖。 */
 .gridnote-shell {
     --gridnote-heading-color-h1: var(--gridnote-heading-color-default);
     --gridnote-heading-color-h2: var(--gridnote-heading-color-default);
@@ -176,12 +188,41 @@
     --gridnote-heading-color-h6: var(--gridnote-heading-color-default);
 }
 
-body.theme-light .gridnote-shell {
+/* 卡片表面变量同时覆盖真实视图与截图预览。 */
+:is(
+    .gridnote-shell,
+    .gridnote-screenshot-container
+) {
+    --gridnote-card-surface: var(--gridnote-card-background-color, var(--background-primary));
+}
+
+body.theme-light :is(.gridnote-shell, .gridnote-screenshot-container) {
+    --gridnote-shell-surface: var(--gridnote-shell-background-color, #f2f5f9);
+    background-color: var(--gridnote-shell-surface);
     --gridnote-heading-color-default: var(--gridnote-heading-color-light, #1e1e1e);
 }
 
-body.theme-dark .gridnote-shell {
+body.theme-dark :is(.gridnote-shell, .gridnote-screenshot-container) {
+    --gridnote-shell-surface: var(--gridnote-shell-background-color, #2b2c32);
+    --gridnote-card-surface: var(--gridnote-card-background-color, #34363c);
+    background-color: var(--gridnote-shell-surface);
     --gridnote-heading-color-default: var(--gridnote-heading-color-dark, #e0e0e0);
+}
+
+/* Border 等主题会用 !important 将 workspace 子层级设为透明；
+   仅在 GridNote 模式内使用同优先级层级，恢复该视图标题栏背景。 */
+body:not(.is-mobile).theme-light
+    .workspace-tabs:not(.mod-stacked)
+    .workspace-leaf-content[data-type="markdown"].gridnote-markdown-mode-enabled
+    > .view-header {
+    background-color: var(--gridnote-shell-background-color, #f2f5f9) !important;
+}
+
+body:not(.is-mobile).theme-dark
+    .workspace-tabs:not(.mod-stacked)
+    .workspace-leaf-content[data-type="markdown"].gridnote-markdown-mode-enabled
+    > .view-header {
+    background-color: var(--gridnote-shell-background-color, #2b2c32) !important;
 }
 
 .gridnote-range-editor-modal .modal-content {
@@ -325,26 +366,30 @@ body.theme-dark .gridnote-shell {
     max-width: 100%;
 }
 
-.gridnote-screenshot-container {
+.gridnote-screenshot-border {
+    --gridnote-screenshot-border-width: 5px;
+    --gridnote-screenshot-radius: 16px;
     position: relative;
     min-width: 0;
     max-width: 100%;
     box-sizing: border-box;
     overflow: visible;
+    border: var(--gridnote-screenshot-border-width) solid transparent;
+    border-radius: var(--gridnote-screenshot-radius);
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #d946ef) border-box;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    transition: width 0.3s ease;
+}
+
+.gridnote-screenshot-container {
+    position: relative;
+    width: 100%;
     height: auto;
     font-family: var(--font-text), var(--font-interface), sans-serif;
     padding: 32px 28px 40px 28px;
-    border: 5px solid transparent;
-    border-radius: 16px;
-    background:
-        linear-gradient(
-            135deg,
-            var(--background-primary) 0%,
-            var(--background-secondary) 100%
-        ) padding-box,
-        linear-gradient(90deg, #6366f1, #8b5cf6, #d946ef) border-box;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    transition: width 0.3s ease;
+    box-sizing: border-box;
+    border-radius: calc(var(--gridnote-screenshot-radius) - var(--gridnote-screenshot-border-width));
+    background: var(--gridnote-shell-surface, var(--background-primary));
 }
 
 .gridnote-screenshot-container::before {
@@ -356,7 +401,11 @@ body.theme-dark .gridnote-shell {
     height: 60px;
     pointer-events: none;
     z-index: 2;
-    background: linear-gradient(to bottom, transparent 0%, var(--background-primary) 100%);
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--gridnote-shell-surface, var(--background-primary)) 100%
+    );
 }
 
 .gridnote-screenshot-container::after {
@@ -367,7 +416,7 @@ body.theme-dark .gridnote-shell {
     z-index: 3;
     padding: 2px 6px;
     border-radius: 4px;
-    background: var(--background-primary);
+    background: var(--gridnote-shell-surface, var(--background-primary));
     font-size: 0.75em;
     font-weight: 500;
     letter-spacing: 0.8px;
@@ -382,7 +431,7 @@ body.theme-dark .gridnote-shell {
     display: none;
 }
 
-.gridnote-screenshot-container :is(.cardflow-tree-node, .cascade-node) {
+.gridnote-screenshot-container .cascade-node {
     position: relative;
     z-index: 1;
 }
@@ -410,7 +459,7 @@ body.theme-dark .gridnote-shell {
     height: 16px;
 }
 
-.gridnote-screenshot-container :is(.cardflow-node-heading-row, .cascade-node-heading-row):hover .gridnote-screenshot-hide-node-btn {
+.gridnote-screenshot-container .cascade-node-heading-row:hover .gridnote-screenshot-hide-node-btn {
     opacity: 1;
 }
 
@@ -429,13 +478,13 @@ body.theme-dark .gridnote-shell {
 }
 
 /* Screenshot modal: heading is just eye-off icon + title text */
-.gridnote-screenshot-container.gridnote-screenshot-container :is(.cardflow-node-heading-row, .cascade-node-heading-row) {
+.gridnote-screenshot-container.gridnote-screenshot-container .cascade-node-heading-row {
     display: flex;
     align-items: flex-start;
     gap: 6px;
 }
 
-.gridnote-screenshot-container.gridnote-screenshot-container :is(.cardflow-node-title, .cascade-node-title) {
+.gridnote-screenshot-container.gridnote-screenshot-container .cascade-node-title {
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
@@ -492,8 +541,11 @@ body.theme-dark .gridnote-shell {
         padding: 14px;
     }
 
+    .gridnote-screenshot-border {
+        --gridnote-screenshot-radius: 14px;
+    }
+
     .gridnote-screenshot-container {
-        border-radius: 14px;
         padding: 24px 18px 30px 18px;
     }
 }
@@ -1030,14 +1082,6 @@ body.theme-dark .gridnote-shell {
 
 .grid-note-setting-activate .setting-item-control input {
     min-width: 200px;
-}
-
-.gridnote-theme-section {
-    margin: 0 0 18px;
-}
-
-.gridnote-theme-selector-host {
-    width: 100%;
 }
 
 /* Embeddable editor textarea fallback styles */
