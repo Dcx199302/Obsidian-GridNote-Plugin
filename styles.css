@@ -209,46 +209,62 @@ body.theme-dark :is(.gridnote-shell, .gridnote-screenshot-container) {
     --gridnote-heading-color-default: var(--gridnote-heading-color-dark, #e0e0e0);
 }
 
-/* Border 等主题会用 !important 将 workspace 子层级设为透明；
-   仅在 GridNote 模式内使用同优先级层级，恢复该视图标题栏背景。 */
-body:not(.is-mobile).theme-light
-    .workspace-tabs:not(.mod-stacked)
-    .workspace-leaf-content[data-type="markdown"].gridnote-markdown-mode-enabled
-    > .view-header {
-    background-color: var(--gridnote-shell-background-color, #f2f5f9) !important;
+/* 第三方主题可能用高优先级声明将 header 背景设为透明。
+   使用插件自有伪元素绘制背景，避免参与 background-color 竞争。 */
+.gridnote-view-header {
+    position: relative;
 }
 
-body:not(.is-mobile).theme-dark
-    .workspace-tabs:not(.mod-stacked)
-    .workspace-leaf-content[data-type="markdown"].gridnote-markdown-mode-enabled
-    > .view-header {
-    background-color: var(--gridnote-shell-background-color, #2b2c32) !important;
+.gridnote-view-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--gridnote-shell-background-color, var(--background-primary));
 }
 
 .gridnote-range-editor-modal .modal-content {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
     overflow: hidden;
     padding: 0;
 }
 
-.gridnote-range-editor-modal .modal-header {
-    flex-shrink: 0;
-    border-bottom: none;
+.gridnote-native-modal-header {
+    display: flex;
+    align-items: center;
+    gap: var(--size-4-2);
 }
 
-.gridnote-range-editor-modal .modal-title {
-    display: none;
+.gridnote-native-modal-header .modal-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gridnote-native-modal-header .modal-header-button {
+    position: static;
+    flex: 0 0 auto;
+    margin-inline-start: auto;
+}
+
+.gridnote-native-modal-header .modal-header-button.mod-raised.clickable-icon {
+    position: static;
 }
 
 .gridnote-range-editor-modal .inline-title,
 .gridnote-range-editor-modal .markdown-embed-link {
-    display: none !important;
+    display: none;
 }
 
 .gridnote-range-editor-modal .markdown-embed {
-    border-inline-start: 0 !important;
+    border-inline-start: 0;
 }
 
 .gridnote-range-editor-container {
@@ -271,7 +287,7 @@ body:not(.is-mobile).theme-dark
     border: 1px solid var(--background-modifier-border);
     border-radius: var(--radius-s);
     background: var(--background-primary);
-    font-size: var(--font-text-size) !important;
+    font-size: var(--font-text-size);
 }
 
 .gridnote-range-editor .cm-scroller {
@@ -317,8 +333,9 @@ body:not(.is-mobile).theme-dark
 .gridnote-screenshot-modal .modal-content {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1 1 auto;
     min-height: 0;
+    height: auto;
     overflow: hidden;
     padding: 0;
 }
@@ -469,7 +486,7 @@ body:not(.is-mobile).theme-dark
 }
 
 .gridnote-screenshot-capturing .gridnote-screenshot-hide-node-btn {
-    display: none !important;
+    display: none;
 }
 
 .gridnote-screenshot-container img[data-gridnote-rasterized-svg] {
@@ -701,7 +718,9 @@ body:not(.is-mobile).theme-dark
 .gridnote-text-search-modal .modal-content {
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
     min-height: 0;
+    height: auto;
     padding: 0;
     overflow: hidden;
 }
@@ -727,8 +746,9 @@ body:not(.is-mobile).theme-dark
     --gridnote-search-card-title-color: var(--interactive-accent);
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
     min-height: 0;
-    height: 100%;
+    height: auto;
     padding: 18px 18px 20px;
     gap: 16px;
     background:
@@ -772,18 +792,18 @@ body:not(.is-mobile).theme-dark
     height: 100%;
 }
 
-.gridnote-text-search-input {
+.gridnote-text-search-input-shell .gridnote-text-search-input {
     width: 100%;
     min-width: 0;
     height: 42px;
     padding: 0;
-    border: none !important;
+    border: none;
     border-radius: 0;
-    background: transparent !important;
+    background: transparent;
     color: var(--text-normal);
     font-family: inherit;
     font-size: 14px;
-    box-shadow: none !important;
+    box-shadow: none;
     appearance: none;
     -webkit-appearance: none;
 }
@@ -883,7 +903,7 @@ body:not(.is-mobile).theme-dark
 
 .gridnote-text-search-empty[hidden],
 .gridnote-text-search-results[hidden] {
-    display: none !important;
+    display: none;
 }
 
 .gridnote-text-search-empty-icon {
@@ -1106,6 +1126,8 @@ body:not(.is-mobile).theme-dark
 
 /* Modal sizes */
 .gridnote-screenshot-modal {
+    display: flex;
+    flex-direction: column;
     width: 95vw;
     max-width: 1600px;
     min-width: 900px;
@@ -1115,6 +1137,8 @@ body:not(.is-mobile).theme-dark
 }
 
 .gridnote-text-search-modal {
+    display: flex;
+    flex-direction: column;
     width: min(1360px, calc(100vw - 32px));
     max-width: 1360px;
     height: min(82vh, 900px);
@@ -1122,6 +1146,8 @@ body:not(.is-mobile).theme-dark
 }
 
 .gridnote-range-editor-modal {
+    display: flex;
+    flex-direction: column;
     width: 90vw;
     max-width: 1200px;
     min-width: 800px;
@@ -1137,7 +1163,7 @@ body:not(.is-mobile).theme-dark
     padding: 0.4rem 0.6rem;
 }
 
-.modal:has(.gridnote-prompt-input) .setting-item {
+.gridnote-prompt-modal .setting-item {
     border-top: none;
     padding-top: 0;
 }
