@@ -206,7 +206,7 @@ body.theme-dark :is(.gridnote-shell, .gridnote-screenshot-container) {
     --gridnote-shell-surface: var(--gridnote-shell-background-color, #2b2c32);
     --gridnote-card-surface: var(--gridnote-card-background-color, #34363c);
     background-color: var(--gridnote-shell-surface);
-    --gridnote-heading-color-default: var(--gridnote-heading-color-dark, #e0e0e0);
+    --gridnote-heading-color-default: var(--gridnote-heading-color-dark, #8ab4ff);
 }
 
 /* 第三方主题可能用高优先级声明将 header 背景设为透明。
@@ -825,7 +825,14 @@ body.theme-dark :is(.gridnote-shell, .gridnote-screenshot-container) {
         inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
+.gridnote-text-search-modal
+.gridnote-text-search-input-shell
+.gridnote-text-search-input:active,
+.gridnote-text-search-modal
+.gridnote-text-search-input-shell
 .gridnote-text-search-input:focus,
+.gridnote-text-search-modal
+.gridnote-text-search-input-shell
 .gridnote-text-search-input:focus-visible {
     outline: none;
     box-shadow: none;
@@ -1173,4 +1180,67 @@ body.theme-dark :is(.gridnote-shell, .gridnote-screenshot-container) {
     width: var(--font-ui-small, 13px);
     height: var(--font-ui-small, 13px);
     margin-right: 4px;
+}
+
+/* Image preview trigger: styles.css loads before markdown buttons are enhanced. */
+.gridnote-image-preview-anchor {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-start;
+    max-width: 100%;
+}
+
+.gridnote-image-preview-anchor img {
+    display: block;
+    max-width: 100%;
+}
+
+.gridnote-image-preview-trigger {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 9;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-s);
+    background: rgba(18, 20, 24, 0.74);
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    color: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        transform 140ms ease,
+        background-color 140ms ease,
+        border-color 140ms ease,
+        opacity 140ms ease,
+        visibility 140ms ease;
+}
+
+.gridnote-image-preview-anchor:hover > .gridnote-image-preview-trigger,
+.gridnote-image-preview-anchor:focus-within > .gridnote-image-preview-trigger {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(-1px);
+}
+
+.gridnote-image-preview-trigger:hover {
+    color: var(--text-on-accent) !important;
+    border-color: var(--interactive-accent);
+    background: var(--interactive-accent);
+}
+
+.gridnote-image-preview-trigger:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: 1px;
+}
+
+.gridnote-image-preview-trigger :is(svg, .svg-icon) {
+    width: 16px;
+    height: 16px;
 }
