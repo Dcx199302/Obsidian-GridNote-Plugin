@@ -1195,7 +1195,7 @@ body.theme-dark :is(.gridnote-shell, .gridnote-screenshot-container) {
     max-width: 100%;
 }
 
-.gridnote-image-preview-trigger {
+.gridnote-image-preview-anchor > button.gridnote-image-preview-trigger {
     position: absolute;
     top: 8px;
     left: 8px;
@@ -1205,7 +1205,7 @@ body.theme-dark :is(.gridnote-shell, .gridnote-screenshot-container) {
     border-radius: var(--radius-s);
     background: rgba(18, 20, 24, 0.74);
     border: 1px solid rgba(255, 255, 255, 0.34);
-    color: rgba(255, 255, 255, 0.96) !important;
+    color: rgba(255, 255, 255, 0.96);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
     cursor: pointer;
     backdrop-filter: blur(6px);
@@ -1228,8 +1228,8 @@ body.theme-dark :is(.gridnote-shell, .gridnote-screenshot-container) {
     transform: translateY(-1px);
 }
 
-.gridnote-image-preview-trigger:hover {
-    color: var(--text-on-accent) !important;
+.gridnote-image-preview-anchor > button.gridnote-image-preview-trigger:hover {
+    color: var(--text-on-accent);
     border-color: var(--interactive-accent);
     background: var(--interactive-accent);
 }
