@@ -269,9 +269,10 @@ function createBrowseResult(node: SearchableNode): GridNoteSearchResult {
 
 function createPreviewSnippet(text: string): GridNoteSearchSnippet {
     const trimmedText = text.trim();
-    const preview = trimmedText.length > 180
-        ? trimmedText.slice(0, 180).trimEnd()
-        : trimmedText;
+    let preview = trimmedText;
+    if (preview.length > 180) {
+        preview = preview.slice(0, 180).trimEnd();
+    }
 
     return {
         text: preview,

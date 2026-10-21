@@ -23,7 +23,8 @@ function isFrontmatterDelimiter(line: string): boolean {
         : line;
 
     // YAML frontmatter 分隔符必须从第 0 列开始；缩进的 --- 可以出现在块标量内部。
-    return withoutCr.trimEnd() === '---';
+    const normalizedDelimiter = withoutCr.trimEnd();
+    return normalizedDelimiter === '---';
 }
 
 function findFrontmatterBoundary(content: string): FrontmatterBoundary | null {

@@ -57,7 +57,7 @@
     }
 
     function createLoadingElement(markdown: string): HTMLDivElement {
-        const loadingEl = document.createElement('div');
+        const loadingEl = createEl('div');
         const lineCount = Math.max(1, markdown.split('\n').length);
         const estimatedHeight = Math.min(
             640,
@@ -74,7 +74,7 @@
     }
 
     function createPlainTextElement(markdown: string): HTMLDivElement {
-        const plainTextEl = document.createElement('div');
+        const plainTextEl = createEl('div');
         plainTextEl.className = 'markdown-content-plain';
         plainTextEl.textContent = markdown;
         return plainTextEl;
@@ -164,7 +164,7 @@
             return;
         }
 
-        const renderHostEl = document.createElement('div');
+        const renderHostEl = createEl('div');
         renderHostEl.className = 'markdown-rendered markdown-preview-view gridnote-markdown-content';
 
         const component = new Component();

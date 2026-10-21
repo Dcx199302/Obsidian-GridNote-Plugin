@@ -1,4 +1,4 @@
-import { App, Notice, PluginSettingTab, Setting, normalizePath } from 'obsidian';
+import { App, Notice, PluginSettingTab, Setting, normalizePath, type SettingDefinitionItem } from 'obsidian';
 
 import MyPlugin from './main';
 import { GridNoteFolderSuggest } from './utils/GridNoteFolderSuggest';
@@ -24,6 +24,75 @@ export class GridNoteSettingTab extends PluginSettingTab {
 	constructor(app: App, plugin: MyPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
+	}
+
+	getSettingDefinitions(): SettingDefinitionItem[] {
+		return [
+			{
+				name: '截图保存文件夹',
+				desc: '截图导出的保存位置，留空时使用默认文件夹 GridNote-Screenshots',
+				control: {
+					type: 'folder',
+					key: 'screenshotFolder',
+					defaultValue: '',
+					placeholder: 'GridNote-Screenshots',
+				},
+			},
+			{
+				name: '标题颜色（浅色模式）',
+				desc: '自定义浅色模式下的卡片标题颜色',
+				control: {
+					type: 'color',
+					key: 'headingColorLight',
+					defaultValue: '#1e1e1e',
+				},
+			},
+			{
+				name: '标题颜色（深色模式）',
+				desc: '自定义深色模式下的卡片标题颜色',
+				control: {
+					type: 'color',
+					key: 'headingColorDark',
+					defaultValue: '#8ab4ff',
+				},
+			},
+			{
+				name: '文件树最大显示层级',
+				desc: '文件树浏览器同时渲染的文件夹嵌套层级上限',
+				control: {
+					type: 'slider',
+					key: 'fileTreeMaxVisibleLayers',
+					defaultValue: 5,
+					min: 2,
+					max: 8,
+					step: 1,
+				},
+			},
+		];
+	}
+
+	override async setControlValue(key: string, value: unknown): Promise<void> {
+		const settings = this.plugin.settings;
+		switch (key) {
+			case 'screenshotFolder':
+				settings.screenshotFolder = typeof value === 'string' ? value : '';
+				break;
+			case 'headingColorLight':
+				settings.headingColorLight = typeof value === 'string' ? value : '';
+				break;
+			case 'headingColorDark':
+				settings.headingColorDark = typeof value === 'string' ? value : '';
+				break;
+			case 'fileTreeMaxVisibleLayers':
+				settings.fileTreeMaxVisibleLayers = typeof value === 'number' ? value : 5;
+				break;
+			default:
+				return;
+		}
+		await this.plugin.saveSettings();
+		if (key === 'headingColorLight' || key === 'headingColorDark') {
+			this.plugin.applyHeadingColors();
+		}
 	}
 
 	display(): void {

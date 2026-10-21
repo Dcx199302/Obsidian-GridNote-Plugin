@@ -31,7 +31,7 @@
     }
 
     function createPlainTextElement(text: string): HTMLSpanElement {
-        const plainTextEl = document.createElement('span');
+        const plainTextEl = createEl('span');
         plainTextEl.className = 'inline-markdown-text-plain';
         plainTextEl.textContent = text;
         return plainTextEl;
@@ -96,7 +96,7 @@
             return;
         }
 
-        const renderHostEl = document.createElement('div');
+        const renderHostEl = createEl('div');
         renderHostEl.className = 'markdown-rendered markdown-preview-view';
 
         const component = new Component();
