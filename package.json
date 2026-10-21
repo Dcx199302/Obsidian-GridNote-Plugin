@@ -1,6 +1,6 @@
 {
 	"name": "grid-note",
-	"version": "2.2.2",
+	"version": "2.2.3",
 	"description": "将 Markdown 转换阅读更专注和高效的树形表格视图。",
 	"main": "main.js",
 	"type": "module",
