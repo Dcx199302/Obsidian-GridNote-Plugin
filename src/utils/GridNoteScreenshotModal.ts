@@ -257,7 +257,7 @@ export class GridNoteScreenshotModal extends Modal {
             }
 
             // Insert eye-off button at the beginning
-            const buttonEl = document.createElement('button');
+            const buttonEl = createEl('button');
             buttonEl.type = 'button';
             buttonEl.className = 'gridnote-screenshot-hide-node-btn';
             setIcon(buttonEl, 'eye-off');
@@ -513,7 +513,7 @@ export class GridNoteScreenshotModal extends Modal {
     }
 
     private downloadBlob(blob: Blob, fileName: string): void {
-        const linkEl = document.createElement('a');
+        const linkEl = createEl('a');
         const blobUrl = URL.createObjectURL(blob);
         linkEl.href = blobUrl;
         linkEl.download = fileName;

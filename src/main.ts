@@ -36,7 +36,7 @@ export default class GridNotePlugin extends Plugin {
 		this.markdownModeManager = new GridNoteMarkdownModeManager(this);
 
 		this.addCommand({
-			id: 'toggle-grid-note-markdown-mode',
+			id: 'toggle-markdown-mode',
 			name: toggleGridNoteMarkdownModeText.name,
 			checkCallback: (checking: boolean) => {
 				const view = this.app.workspace.getActiveViewOfType(MarkdownView);
@@ -203,7 +203,7 @@ export default class GridNotePlugin extends Plugin {
 		const nextValue = !currentValue;
 
 		try {
-			await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+			await this.app.fileManager.processFrontMatter(file, (frontmatter: Record<string, unknown>) => {
 				frontmatter.gridnote = nextValue;
 			});
 

@@ -10,7 +10,7 @@ const DRILL_STORAGE_KEY = 'GRID_NOTE_FILE_TREE_LAST_DRILL_PATH';
 /** 读取上次下钻的文件夹路径（容错：损坏/非法时降级为根） */
 export function readLastDrillPath(app: App): string {
 	try {
-		const stored = app.loadLocalStorage(DRILL_STORAGE_KEY);
+		const stored = app.loadLocalStorage(DRILL_STORAGE_KEY) as string | null;
 		if (!stored) return '';
 		return typeof stored === 'string' ? stored : '';
 	} catch {

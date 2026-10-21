@@ -1216,3 +1216,26 @@ body.theme-dark :is(.gridnote-shell, .gridnote-screenshot-container) {
     width: 16px;
     height: 16px;
 }
+
+/* File drag: disable text selection while dragging */
+body.gridnote-file-drag-active {
+    user-select: none;
+}
+
+/* File tree modal sizing */
+.gridnote-file-tree-modal {
+    width: 85vw;
+    min-width: 600px;
+    height: 85vh;
+    max-height: 1000px;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.gridnote-file-tree-modal .modal-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}

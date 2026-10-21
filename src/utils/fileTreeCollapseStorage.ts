@@ -21,9 +21,10 @@ export function readCollapsedPaths(app: App): string[] {
 	try {
 		const stored = readVaultLocalStorage(app, COLLAPSE_STORAGE_KEY);
 		if (!stored) return [];
-		const parsed = typeof stored === 'string' ? JSON.parse(stored) : stored;
-		if (!Array.isArray(parsed)) return [];
-		return parsed.filter((v): v is string => typeof v === 'string' && v.length > 0);
+		const parsed: unknown = typeof stored === 'string' ? JSON.parse(stored) as unknown : stored;
+		const parsedList = Array.isArray(parsed) ? parsed as unknown[] : null;
+		if (!parsedList) return [];
+		return parsedList.filter((v): v is string => typeof v === 'string' && v.length > 0);
 	} catch (error) {
 		console.error('GridNote: 读取文件树折叠状态失败', error);
 		return [];

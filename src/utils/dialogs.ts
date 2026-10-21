@@ -46,7 +46,7 @@ export class PromptModal extends Modal {
 			);
 
 		// 自动聚焦并全选，方便快速替换文件名
-		requestAnimationFrame(() => {
+		window.requestAnimationFrame(() => {
 			this.inputEl?.focus();
 			this.inputEl?.select();
 		});

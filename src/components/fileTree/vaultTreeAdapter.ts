@@ -3,9 +3,9 @@ import type { CardTreeNode } from '@xuchengdong/cardtree-svelte';
 import type { FolderCardData, VaultFileEntry } from './fileTreeTypes';
 import { readSortOrder, type FileTreeSortData } from '../../utils/fileTreeSortStorage';
 
-/** 判断是否应跳过该文件/文件夹（隐藏文件、.obsidian 等） */
-function shouldSkip(file: TAbstractFile): boolean {
-	return file.name.startsWith('.') || file.name === '.obsidian';
+/** 判断是否应跳过该文件/文件夹（隐藏文件、配置目录等） */
+function shouldSkip(file: TAbstractFile, configDir: string): boolean {
+	return file.name.startsWith('.') || file.name === configDir;
 }
 
 /**
@@ -63,8 +63,8 @@ function fileToEntry(file: TFile): VaultFileEntry {
  * - data.files = 文件夹直属文件（卡片内容）
  * - children = 子文件夹（嵌套卡片）
  */
-function folderToCardNode(folder: TFolder, order: FileTreeSortData): CardTreeNode<FolderCardData> {
-	const visibleChildren = sortChildren(folder.children.filter(c => !shouldSkip(c)), folder.path, order);
+function folderToCardNode(folder: TFolder, order: FileTreeSortData, configDir: string): CardTreeNode<FolderCardData> {
+	const visibleChildren = sortChildren(folder.children.filter(c => !shouldSkip(c, configDir)), folder.path, order);
 	const files: VaultFileEntry[] = [];
 	const subfolders: TFolder[] = [];
 
@@ -87,7 +87,7 @@ function folderToCardNode(folder: TFolder, order: FileTreeSortData): CardTreeNod
 			folderName: folder.name,
 			files,
 		},
-		children: subfolders.map(sub => folderToCardNode(sub, order)),
+		children: subfolders.map(sub => folderToCardNode(sub, order, configDir)),
 	};
 }
 
@@ -109,13 +109,13 @@ export interface VaultCardTreeData {
  */
 export function vaultToCardTree(app: App, root: TFolder, _vaultName: string): VaultCardTreeData {
 	const order = readSortOrder(app);
-	const visibleChildren = sortChildren(root.children.filter(c => !shouldSkip(c)), '', order);
+	const visibleChildren = sortChildren(root.children.filter(c => !shouldSkip(c, app.vault.configDir)), '', order);
 	const folderNodes: CardTreeNode<FolderCardData>[] = [];
 	const rootFiles: VaultFileEntry[] = [];
 
 	for (const child of visibleChildren) {
 		if (child instanceof TFolder) {
-			folderNodes.push(folderToCardNode(child, order));
+			folderNodes.push(folderToCardNode(child, order, app.vault.configDir));
 		} else if (child instanceof TFile) {
 			rootFiles.push(fileToEntry(child));
 		}
@@ -158,7 +158,7 @@ function filterNode(node: CardTreeNode<FolderCardData>, q: string): CardTreeNode
 
 	// 文件夹名匹配 → 节点保留（不丢），直属文件全保留；子文件夹仍递归剪枝
 	if (data.folderName.toLowerCase().includes(q)) {
-		const filteredChildren = (node.children as CardTreeNode<FolderCardData>[])
+		const filteredChildren = node.children
 			.map(c => filterNode(c, q))
 			.filter((c): c is CardTreeNode<FolderCardData> => c !== null);
 		return {
@@ -170,7 +170,7 @@ function filterNode(node: CardTreeNode<FolderCardData>, q: string): CardTreeNode
 
 	// 文件夹名不匹配 → 仅保留 basename 命中的直属文件，并递归过滤子文件夹
 	const matchedFiles = filterDirectFiles(data.folderName, data.files, q);
-	const filteredChildren = (node.children as CardTreeNode<FolderCardData>[])
+	const filteredChildren = node.children
 		.map(c => filterNode(c, q))
 		.filter((c): c is CardTreeNode<FolderCardData> => c !== null);
 

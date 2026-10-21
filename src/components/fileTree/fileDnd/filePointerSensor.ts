@@ -23,11 +23,11 @@ export function createFilePointerSensor(options: FilePointerSensorOptions) {
 	function onPointerDown(e: PointerEvent) {
 		// 仅响应主键
 		if (e.button !== 0) return;
-		const entry = (e.target as HTMLElement).closest('[data-file-path]') as HTMLElement | null;
+		const entry: HTMLElement | null = (e.target as HTMLElement).closest('[data-file-path]');
 		if (!entry) return;
 		const path = entry.getAttribute('data-file-path');
 		if (!path) return;
-		const grid = entry.closest('[data-folder-id]') as HTMLElement | null;
+		const grid: HTMLElement | null = entry.closest('[data-folder-id]');
 		if (!grid) return;
 
 		startX = e.clientX;
@@ -75,7 +75,7 @@ export function createFilePointerSensor(options: FilePointerSensorOptions) {
 		};
 		document.addEventListener('click', handler, true);
 		// 兜底：200ms 后自行移除
-		setTimeout(() => document.removeEventListener('click', handler, true), 200);
+		window.setTimeout(() => document.removeEventListener('click', handler, true), 200);
 	}
 
 	function cleanup() {

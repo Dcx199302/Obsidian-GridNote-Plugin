@@ -68,7 +68,7 @@ interface WidgetEditorLike {
 
 type MarkdownEmbedFactory = (
 	context: { app: App; containerEl: HTMLElement },
-	file: TFile,
+	file: TFile | null,
 	content: string,
 ) => WidgetEditorLike | null | undefined;
 
@@ -318,7 +318,7 @@ export class EmbeddableMarkdownEditor extends Component {
 
 		const widgetEditor = factory(
 			{ app: this.app, containerEl: this.containerEl },
-			null as unknown as TFile,
+			null,
 			this._value,
 		);
 
@@ -564,7 +564,7 @@ export class EmbeddableMarkdownEditor extends Component {
 	}
 
 	private createTextareaEditor(): void {
-		const textarea = document.createElement("textarea");
+		const textarea = createEl("textarea");
 		textarea.className = [this.options.cls, "embeddable-editor-textarea"].filter(Boolean).join(" ");
 		textarea.placeholder = this.options.placeholder || "Edit markdown here...";
 		textarea.value = this._value;

@@ -61,7 +61,7 @@ export class VaultTreeStore implements Readable<VaultTreeStoreSnapshot> {
 
 		const order = readSortOrder(app);
 		const visibleChildren = sortChildren(
-			root.children.filter(c => !shouldSkip(c)),
+			root.children.filter(c => !shouldSkip(c, app.vault.configDir)),
 			'',
 			order,
 		);
@@ -251,7 +251,7 @@ export class VaultTreeStore implements Readable<VaultTreeStoreSnapshot> {
 	private buildStableNode(folder: TFolder, order: FileTreeSortData): StableFolderNode {
 		const stableId = this.nextStableId();
 		const visibleChildren = sortChildren(
-			folder.children.filter(c => !shouldSkip(c)),
+			folder.children.filter(c => !shouldSkip(c, this.app.vault.configDir)),
 			folder.path,
 			order,
 		);
@@ -668,8 +668,8 @@ export class VaultTreeStore implements Readable<VaultTreeStoreSnapshot> {
 	}
 }
 
-function shouldSkip(file: TAbstractFile): boolean {
-	return file.name.startsWith('.') || file.name === '.obsidian';
+function shouldSkip(file: TAbstractFile, configDir: string): boolean {
+	return file.name.startsWith('.') || file.name === configDir;
 }
 
 function fileToEntry(file: TFile): VaultFileEntry {

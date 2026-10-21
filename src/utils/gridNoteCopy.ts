@@ -83,7 +83,7 @@ export async function copyMarkdownAsRichText(
     markdown: string,
     sourcePath: string
 ): Promise<void> {
-    const tempEl = document.createElement('div');
+    const tempEl = createEl('div');
     const tempComponent = new Component();
 
     try {
@@ -110,7 +110,7 @@ export async function copyMarkdownAsRichText(
                     'text/plain': textBlob
                 })
             ]);
-        } catch (_error) {
+        } catch {
             await navigator.clipboard.writeText(plainText);
         }
     } finally {

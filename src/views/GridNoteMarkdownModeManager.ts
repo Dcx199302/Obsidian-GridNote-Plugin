@@ -25,7 +25,8 @@ import {
 import type {
     GridNoteCardEditDraft,
     GridNoteCardInsertPosition,
-    GridNoteCardSelectionHint
+    GridNoteCardSelectionHint,
+    GridNoteCardSelectionOptions
 } from '../components/themes/shared/cardEditingContext';
 import {
     getFrontmatterBodyStartLine,
@@ -63,6 +64,10 @@ import { hasSourceEditorTransitioned } from './markdownMode/sourceEditorTransiti
 import { describeLineEdit } from './markdownMode/foldRangeEdit';
 import type { GridNoteMarkdownModeState } from './markdownMode/types';
 import type { PersistedFoldState } from '../utils/foldStorage';
+
+type GridNoteContentInstance = GridNoteContent & {
+    selectNodeById(nodeId: string, options?: GridNoteCardSelectionOptions): boolean;
+};
 
 export class GridNoteMarkdownModeManager {
     private readonly plugin: GridNotePlugin;
@@ -1015,8 +1020,9 @@ export class GridNoteMarkdownModeManager {
                     return;
                 }
 
+                const contentComponent = state.component as GridNoteContentInstance | null;
                 window.requestAnimationFrame(() => {
-                    state.component?.selectNodeById(node.viewId, {
+                    contentComponent?.selectNodeById(node.viewId, {
                         focus: true,
                         scroll: false
                     });
@@ -1604,7 +1610,7 @@ export class GridNoteMarkdownModeManager {
         state: GridNoteMarkdownModeState
     ): void {
         const actionContainer = view.containerEl.querySelector('.view-actions');
-        if (!(actionContainer instanceof HTMLElement)) {
+        if (!actionContainer?.instanceOf(HTMLElement)) {
             return;
         }
 
@@ -1664,7 +1670,7 @@ export class GridNoteMarkdownModeManager {
 
         const toggleButton = state.buttons.toggle;
         const actionContainer = view.containerEl.querySelector('.view-actions');
-        if (!(toggleButton instanceof HTMLElement) || !(actionContainer instanceof HTMLElement)) {
+        if (!toggleButton?.instanceOf(HTMLElement) || !actionContainer?.instanceOf(HTMLElement)) {
             return;
         }
         this.syncFloatingToolbarState(view);
@@ -1695,12 +1701,12 @@ export class GridNoteMarkdownModeManager {
 
     private ensureOverlayContainer(view: MarkdownView): HTMLElement {
         const existingContainer = view.contentEl.querySelector('.gridnote-markdown-overlay');
-        if (existingContainer instanceof HTMLElement) {
+        if (existingContainer?.instanceOf(HTMLElement)) {
             existingContainer.replaceChildren();
             return existingContainer;
         }
 
-        const container = document.createElement('div');
+        const container = createEl('div');
         container.className = 'gridnote-markdown-overlay';
         container.tabIndex = -1;
         view.contentEl.appendChild(container);
@@ -1716,7 +1722,7 @@ export class GridNoteMarkdownModeManager {
         );
 
         markdownContent.forEach((element) => {
-            if (element instanceof HTMLElement) {
+            if (element.instanceOf(HTMLElement)) {
                 element.classList.toggle('gridnote-markdown-native-hidden', hidden);
                 // The native Markdown editor stays mounted for sync/history, but must be inert
                 // while GridNote owns interaction, otherwise it can still capture focus/keyboard.
@@ -1726,7 +1732,7 @@ export class GridNoteMarkdownModeManager {
                     element.setAttribute('aria-hidden', 'true');
 
                     const activeElement = document.activeElement;
-                    if (activeElement instanceof HTMLElement && element.contains(activeElement)) {
+                    if (activeElement?.instanceOf(HTMLElement) && element.contains(activeElement)) {
                         activeElement.blur();
                     }
                 } else {
@@ -1738,7 +1744,7 @@ export class GridNoteMarkdownModeManager {
 
     private blurFocusedElementInsideView(view: MarkdownView): void {
         const activeElement = document.activeElement;
-        if (!(activeElement instanceof HTMLElement)) {
+        if (!activeElement?.instanceOf(HTMLElement)) {
             return;
         }
 

@@ -12,6 +12,20 @@ export interface CapturedMenuItem {
 	onClick: (evt: MouseEvent | KeyboardEvent) => void;
 }
 
+interface CapturedMenuItemProxy {
+	setTitle(title: string | DocumentFragment): CapturedMenuItemProxy;
+	setIcon(icon: string | null): CapturedMenuItemProxy;
+	onClick(cb: (evt: MouseEvent | KeyboardEvent) => void): CapturedMenuItemProxy;
+}
+
+interface CapturedMenuProxy {
+	addItem(cb: (item: CapturedMenuItemProxy) => void): CapturedMenuProxy;
+	addSeparator(): CapturedMenuProxy;
+	setNoIcon(): CapturedMenuProxy;
+	setUseNativeMenu(): CapturedMenuProxy;
+	addClass(): CapturedMenuProxy;
+}
+
 export function captureFileMenuItems(app: App, folderPath: string): CapturedMenuItem[] {
 	const folder = folderPath
 		? app.vault.getAbstractFileByPath(folderPath)
@@ -22,13 +36,13 @@ export function captureFileMenuItems(app: App, folderPath: string): CapturedMenu
 
 	// MenuItem 代理：记录插件设置的 title/icon/onClick，
 	// 用 Proxy catch-all 兼容 setSectionSubmenu 等任意未知方法
-	const createItemProxy = () => {
+	const createItemProxy = (): { itemProxy: CapturedMenuItemProxy; captured: CapturedMenuItem } => {
 		const captured: CapturedMenuItem = {
 			title: '',
 			icon: null,
 			onClick: () => {},
 		};
-		const handlers = {
+		const handlers: Record<string, unknown> = {
 			setTitle(title: unknown) {
 				if (typeof title === 'string') {
 					captured.title = title;
@@ -37,7 +51,10 @@ export function captureFileMenuItems(app: App, folderPath: string): CapturedMenu
 				}
 				return itemProxy;
 			},
-			setIcon(icon: string | null) { captured.icon = icon; return itemProxy; },
+			setIcon(icon: unknown) {
+				captured.icon = typeof icon === 'string' ? icon : null;
+				return itemProxy;
+			},
 			onClick(cb: (evt: MouseEvent | KeyboardEvent) => void) {
 				captured.onClick = cb;
 				return itemProxy;
@@ -46,17 +63,17 @@ export function captureFileMenuItems(app: App, folderPath: string): CapturedMenu
 		// 未知属性返回 no-op 函数，防止插件调用未实现方法时抛 TypeError
 		const itemProxy = new Proxy(handlers, {
 			get(target, prop) {
-				if (prop in target) return (target as any)[prop];
+				if (typeof prop === 'string' && prop in target) return target[prop];
 				return () => itemProxy;
 			},
-		});
+		}) as unknown as CapturedMenuItemProxy;
 		return { itemProxy, captured };
 	};
 
 	// Menu 代理：拦截 addItem，收集捕获的菜单项，
 	// 同样用 Proxy catch-all 兼容任意未知方法
-	const menuProxy: any = new Proxy({
-		addItem(cb: (item: any) => any) {
+	const menuHandlers: Record<string, unknown> = {
+		addItem(cb: (item: CapturedMenuItemProxy) => unknown) {
 			const { itemProxy, captured } = createItemProxy();
 			try { cb(itemProxy); } catch { /* 插件回调异常时跳过该菜单项 */ }
 			if (captured.title) items.push(captured);
@@ -66,15 +83,16 @@ export function captureFileMenuItems(app: App, folderPath: string): CapturedMenu
 		setNoIcon() { return menuProxy; },
 		setUseNativeMenu() { return menuProxy; },
 		addClass() { return menuProxy; },
-	}, {
+	};
+	const menuProxy = new Proxy(menuHandlers, {
 		get(target, prop) {
-			if (prop in target) return (target as any)[prop];
+			if (typeof prop === 'string' && prop in target) return target[prop];
 			return () => menuProxy;
 		},
-	});
+	}) as unknown as CapturedMenuProxy;
 
 	try {
-		(app.workspace as any).trigger('file-menu', menuProxy, folder, 'file-explorer-context-menu');
+		app.workspace.trigger('file-menu', menuProxy, folder, 'file-explorer-context-menu');
 	} catch { /* 触发事件时出错则忽略 */ }
 
 	return items;
@@ -157,12 +175,12 @@ export async function renameVaultItem(
 }
 
 /**
- * 删除文件或文件夹，默认使用回收站
+ * 删除文件或文件夹，遵循用户的回收站偏好
  */
 export async function deleteVaultItem(
 	app: App,
 	path: string,
-	useTrash: boolean = true,
+	_useTrash: boolean = true,
 ): Promise<boolean> {
 	const file = app.vault.getAbstractFileByPath(path);
 	if (!file) {
@@ -171,11 +189,7 @@ export async function deleteVaultItem(
 	}
 
 	try {
-		if (useTrash) {
-			await app.vault.trash(file, true);
-		} else {
-			await app.vault.delete(file);
-		}
+		await app.fileManager.trashFile(file);
 		return true;
 	} catch (error) {
 		new Notice(`删除失败: ${(error as Error).message}`);
@@ -184,23 +198,19 @@ export async function deleteVaultItem(
 }
 
 /**
- * 批量删除文件（默认使用回收站），单个失败不阻断其余
+ * 批量删除文件（遵循用户回收站偏好），单个失败不阻断其余
  */
 export async function deleteVaultItems(
 	app: App,
 	paths: string[],
-	useTrash: boolean = true,
+	_useTrash: boolean = true,
 ): Promise<number> {
 	let deleted = 0;
 	for (const path of paths) {
 		const file = app.vault.getAbstractFileByPath(path);
 		if (!file) continue;
 		try {
-			if (useTrash) {
-				await app.vault.trash(file, true);
-			} else {
-				await app.vault.delete(file);
-			}
+			await app.fileManager.trashFile(file);
 			deleted++;
 		} catch {
 			// 单个失败不阻断其余

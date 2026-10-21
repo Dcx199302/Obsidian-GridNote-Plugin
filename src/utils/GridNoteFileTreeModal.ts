@@ -9,8 +9,15 @@ import { useCustomModalHeader } from './modalHeader';
  * 全局文件树浏览器弹框
  * 使用 CardTree 组件渲染 Vault 文件结构
  */
+type FileExplorerTreeInstance = FileExplorerTree & {
+	markClosing(): void;
+	handleVaultCreate(path: string, isFolder: boolean): void;
+	handleVaultDelete(path: string, isFolder: boolean): void;
+	handleVaultRename(oldPath: string, newPath: string, isFolder: boolean): void;
+};
+
 export class GridNoteFileTreeModal extends Modal {
-	private component: FileExplorerTree | null = null;
+	private component: FileExplorerTreeInstance | null = null;
 	private eventRefs: EventRef[] = [];
 
 	private readonly plugin: GridNotePlugin;
@@ -24,21 +31,6 @@ export class GridNoteFileTreeModal extends Modal {
 		this.modalEl.addClass('gridnote-file-tree-modal');
 		useCustomModalHeader(this);
 		this.contentEl.empty();
-
-		// 直接设置 Modal 尺寸（不依赖 styles.css 选择器）
-		this.modalEl.style.width = '85vw';
-		// this.modalEl.style.maxWidth = '1400px';
-		this.modalEl.style.minWidth = '600px';
-		this.modalEl.style.height = '85vh';
-		this.modalEl.style.maxHeight = '1000px';
-		this.modalEl.style.display = 'flex';
-		this.modalEl.style.flexDirection = 'column';
-		this.contentEl.style.flex = '1';
-		this.contentEl.style.overflow = 'hidden';
-		this.contentEl.style.display = 'flex';
-		this.contentEl.style.flexDirection = 'column';
-		// 去除 modal 默认 padding，由 header/container 自行控制内边距（header 更紧凑贴边）
-		this.modalEl.style.padding = '0';
 
 		const vaultName = this.app.vault.getName();
 		const store = new VaultTreeStore();
@@ -57,7 +49,7 @@ export class GridNoteFileTreeModal extends Modal {
 				onOpenFile: (path: string) => this.handleOpenFile(path),
 				onClose: () => this.close(),
 			},
-		});
+		}) as FileExplorerTreeInstance;
 
 		this.registerVaultEvents();
 	}
@@ -93,7 +85,7 @@ export class GridNoteFileTreeModal extends Modal {
 				const newParent = parentPathOf(file.path);
 				const oldName = oldPath.substring(oldPath.lastIndexOf('/') + 1);
 				const newName = file.name;
-				const kind = (file instanceof TFolder ? 'folder' : 'file') as 'folder' | 'file';
+				const kind = file instanceof TFolder ? 'folder' : 'file';
 
 				if (file instanceof TFolder) {
 					// 文件夹移动/改名：迁移子树 key（oldPath → file.path，含所有后代路径）

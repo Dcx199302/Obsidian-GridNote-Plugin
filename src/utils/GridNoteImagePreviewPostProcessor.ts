@@ -144,7 +144,7 @@ class GridNoteImagePreviewOverlayController {
             return;
         }
 
-        this.hostEl = document.createElement('div');
+        this.hostEl = createEl('div');
         this.hostEl.className = 'gridnote-image-preview-overlay-host';
         document.body.appendChild(this.hostEl);
 
@@ -267,12 +267,12 @@ class GridNoteImagePreviewChild extends MarkdownRenderChild {
             return;
         }
 
-        const wrapperEl = document.createElement('span');
+        const wrapperEl = createEl('span');
         wrapperEl.className = 'gridnote-image-preview-anchor';
         parentEl.insertBefore(wrapperEl, hostEl);
         wrapperEl.appendChild(hostEl);
 
-        const buttonEl = document.createElement('button');
+        const buttonEl = createEl('button');
         buttonEl.type = 'button';
         buttonEl.className = 'clickable-icon gridnote-image-preview-trigger';
         buttonEl.ariaLabel = '放大预览图片';
@@ -444,12 +444,12 @@ class GridNoteImagePreviewManager {
             return;
         }
 
-        const wrapperEl = document.createElement('span');
+        const wrapperEl = createEl('span');
         wrapperEl.className = 'gridnote-image-preview-anchor';
         parentEl.insertBefore(wrapperEl, hostEl);
         wrapperEl.appendChild(hostEl);
 
-        const buttonEl = document.createElement('button');
+        const buttonEl = createEl('button');
         buttonEl.type = 'button';
         buttonEl.className = 'clickable-icon gridnote-image-preview-trigger';
         buttonEl.ariaLabel = '放大预览图片';

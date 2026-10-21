@@ -82,10 +82,10 @@ export class GridNoteSettingTab extends PluginSettingTab {
 					},
 					cls: 'gridnote-heading-color-picker'
 				}, (input) => {
-					input.addEventListener('input', async (e) => {
+					input.addEventListener('input', (e) => {
 						this.plugin.settings.headingColorLight = (e.target as HTMLInputElement).value;
-						await this.plugin.saveSettings();
 						this.plugin.applyHeadingColors();
+						void this.plugin.saveSettings();
 					});
 				});
 
@@ -97,10 +97,10 @@ export class GridNoteSettingTab extends PluginSettingTab {
 					},
 					cls: 'gridnote-heading-color-picker'
 				}, (input) => {
-					input.addEventListener('input', async (e) => {
+					input.addEventListener('input', (e) => {
 						this.plugin.settings.headingColorDark = (e.target as HTMLInputElement).value;
-						await this.plugin.saveSettings();
 						this.plugin.applyHeadingColors();
+						void this.plugin.saveSettings();
 					});
 				});
 			})

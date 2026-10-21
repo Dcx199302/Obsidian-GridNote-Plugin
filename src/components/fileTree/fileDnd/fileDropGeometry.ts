@@ -150,7 +150,7 @@ export function findDropTarget(
 	const elements = document.elementsFromPoint(x, y);
 
 	for (const el of elements) {
-		if (!(el instanceof HTMLElement)) continue;
+		if (!el.instanceOf(HTMLElement)) continue;
 		const zone = el.closest<HTMLElement>('.gridnote-ft-file-list[data-folder-id]');
 		if (!zone) continue;
 		const folderId = zone.dataset.folderId;

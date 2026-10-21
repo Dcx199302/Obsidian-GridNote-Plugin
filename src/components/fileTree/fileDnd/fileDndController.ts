@@ -120,7 +120,7 @@ export function createFileDndController(options: FileDndControllerOptions) {
 		active = { paths, sourceFolderId, sourceFolderPath, gridEl };
 		dragStore.startDrag(paths, sourceFolderId);
 		setOverlayPosition(x, y);
-		document.body.style.userSelect = 'none';
+		document.body.addClass('gridnote-file-drag-active');
 
 		lastResult = null;
 		lastDropTarget = null;
@@ -134,7 +134,7 @@ export function createFileDndController(options: FileDndControllerOptions) {
 		setOverlayPosition(x, y);
 
 		if (dropRafId === null) {
-			dropRafId = requestAnimationFrame(() => {
+			dropRafId = window.requestAnimationFrame(() => {
 				dropRafId = null;
 				processDropFrame();
 				updateAutoScroll(lastPointerX, lastPointerY);
@@ -172,7 +172,7 @@ export function createFileDndController(options: FileDndControllerOptions) {
 
 	async function onDragEnd(x: number, y: number) {
 		const state = dragStore.getState();
-		document.body.style.userSelect = '';
+		document.body.removeClass('gridnote-file-drag-active');
 		try {
 			if (state.status === 'hovering' && active) {
 				const target = state.dropTarget;
@@ -208,7 +208,7 @@ export function createFileDndController(options: FileDndControllerOptions) {
 			}
 		} finally {
 			if (dropRafId !== null) {
-				cancelAnimationFrame(dropRafId);
+				window.cancelAnimationFrame(dropRafId);
 				dropRafId = null;
 			}
 			lastResult = null;
@@ -261,14 +261,14 @@ export function createFileDndController(options: FileDndControllerOptions) {
 			if (!scrollEl) return;
 			scrollEl.scrollTop += scrollDelta;
 			processDropFrame();
-			scrollRafId = requestAnimationFrame(step);
+			scrollRafId = window.requestAnimationFrame(step);
 		};
-		scrollRafId = requestAnimationFrame(step);
+		scrollRafId = window.requestAnimationFrame(step);
 	}
 
 	function stopAutoScroll(): void {
 		if (scrollRafId !== null) {
-			cancelAnimationFrame(scrollRafId);
+			window.cancelAnimationFrame(scrollRafId);
 			scrollRafId = null;
 		}
 		scrollEl = null;
@@ -404,7 +404,7 @@ export function createFileDndController(options: FileDndControllerOptions) {
 		// elementsFromPoint 兜底：检测卡片 / 根区域 → inside
 		const els = document.elementsFromPoint(x, y) as HTMLElement[];
 		for (const el of els) {
-			const card = el.closest('[data-source-id]') as HTMLElement | null;
+			const card = el.closest('[data-source-id]');
 			if (card) {
 				const folderId = card.getAttribute('data-source-id') ?? ROOT_FOLDER_ID;
 				if (folderId === active.sourceFolderId) return null;
@@ -435,7 +435,7 @@ export function createFileDndController(options: FileDndControllerOptions) {
 
 	function onScroll(): void {
 		if (active && dropRafId === null) {
-			dropRafId = requestAnimationFrame(() => {
+			dropRafId = window.requestAnimationFrame(() => {
 				dropRafId = null;
 				processDropFrame();
 			});
@@ -446,7 +446,7 @@ export function createFileDndController(options: FileDndControllerOptions) {
 		container,
 		onDragStart,
 		onDragMove,
-		onDragEnd,
+		onDragEnd: (x, y) => { void onDragEnd(x, y); },
 	});
 
 	// 拖拽期间监听所有滚动容器的 scroll 事件（capture 以覆盖嵌套容器）
@@ -460,13 +460,13 @@ export function createFileDndController(options: FileDndControllerOptions) {
 			flip.destroy();
 			document.removeEventListener('scroll', onScroll, true);
 			if (dropRafId !== null) {
-				cancelAnimationFrame(dropRafId);
+				window.cancelAnimationFrame(dropRafId);
 				dropRafId = null;
 			}
 			stopAutoScroll();
 			clearCardHighlight();
 			overlayEl = null;
-			document.body.style.userSelect = '';
+			document.body.removeClass('gridnote-file-drag-active');
 		},
 	};
 }

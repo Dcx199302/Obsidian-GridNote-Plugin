@@ -447,7 +447,7 @@ export class GridNoteTextSearchModal extends Modal {
 
     private createCardButton(result: GridNoteSearchResult, order: number): HTMLButtonElement {
         const resultKey = createSearchResultKey(result);
-        const cardButtonEl = document.createElement('button');
+        const cardButtonEl = createEl('button');
         cardButtonEl.type = 'button';
         cardButtonEl.className = 'gridnote-text-search-card';
         cardButtonEl.dataset.gridnoteSearchResultKey = resultKey;

@@ -19,7 +19,7 @@ export function createActionButton({
     registerDomEvent,
     onClick
 }: CreateActionButtonOptions): HTMLElement {
-    const button = document.createElement('div');
+    const button = createEl('div');
     button.className = 'clickable-icon gridnote-markdown-mode-action';
     button.setAttribute('aria-label', label);
     button.tabIndex = 0;
