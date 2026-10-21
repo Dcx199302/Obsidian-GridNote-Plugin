@@ -1,0 +1,98 @@
+name: Release Obsidian Plugin
+
+on:
+    push:
+        tags:
+            - "*"
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "npm"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build plugin
+              run: npm run build
+
+            - name: Verify required files exist
+              run: |
+                  echo "Checking required files..."
+                  ls -la main.js manifest.json styles.css
+
+            - name: Create plugin archive
+              run: |
+                  # 获取标签名（移除 v 前缀）
+                  TAG_NAME=${GITHUB_REF#refs/tags/}
+                  VERSION=${TAG_NAME#v}
+
+                  # 创建压缩包（仅包含必要文件，不包含子目录）
+                  zip -j "obsidian-gridnote-${VERSION}.zip" main.js manifest.json styles.css
+
+                  echo "Archive created: obsidian-gridnote-${VERSION}.zip"
+                  echo "Contents:"
+                  unzip -l "obsidian-gridnote-${VERSION}.zip"
+
+            - name: Extract version info
+              id: version
+              run: |
+                  TAG_NAME=${GITHUB_REF#refs/tags/}
+                  TAG_VERSION=${TAG_NAME#v}
+                  MANIFEST_VERSION=$(cat manifest.json | grep '"version"' | sed 's/.*"version": "\([^"]*\)".*/\1/')
+
+                  echo "tag=${TAG_NAME}" >> $GITHUB_OUTPUT
+                  echo "version=${TAG_VERSION}" >> $GITHUB_OUTPUT
+                  echo "manifest_version=${MANIFEST_VERSION}" >> $GITHUB_OUTPUT
+
+                  # 强制校验：tag 版本必须与 manifest.json 一致
+                  if [ "${TAG_VERSION}" != "${MANIFEST_VERSION}" ]; then
+                    echo "::error title=Version mismatch::Tag version (${TAG_VERSION}) does not match manifest version (${MANIFEST_VERSION}). Please run npm run version and retag."
+                    exit 1
+                  fi
+
+            - name: Generate Release Notes
+              run: |
+                  VERSION=${{ steps.version.outputs.version }}
+
+                  cat > release_notes.md << EOF
+                  ## Installation
+
+                  ### Manual Installation
+                  1. Download \`obsidian-gridnote-${VERSION}.zip\`
+                  2. Extract to your Obsidian plugins folder: \`.obsidian/plugins/grid-note/\`
+                  3. Enable the plugin in Obsidian settings
+
+                  ### Files included:
+                  - \`main.js\` - Plugin main file
+                  - \`manifest.json\` - Plugin manifest
+                  - \`styles.css\` - Plugin styles
+
+                  ---
+                  🤖 Auto-generated release
+                  EOF
+
+            - name: Create Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ steps.version.outputs.tag }}
+                  name: ${{ steps.version.outputs.version }}
+                  body_path: release_notes.md
+                  files: |
+                      obsidian-gridnote-${{ steps.version.outputs.version }}.zip
+                      main.js
+                      manifest.json
+                      styles.css
+                  draft: false
+                  prerelease: false
+                  make_latest: true
